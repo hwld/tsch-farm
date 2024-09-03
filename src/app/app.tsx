@@ -1,14 +1,8 @@
 "use client";
-import {
-  Editor,
-  Monaco,
-  useMonaco,
-  type EditorProps,
-} from "@monaco-editor/react";
-import type { Question } from "./page";
-import { useEffect, useRef } from "react";
-import type { editor, Uri } from "monaco-editor";
-import { Button } from "@/components/ui/button";
+import { Editor, Monaco, type EditorProps } from "@monaco-editor/react";
+import { useRef } from "react";
+import type { editor } from "monaco-editor";
+import type { Question } from "@/lib/question";
 
 type Props = { questions: Question[] };
 
@@ -56,9 +50,7 @@ export const App: React.FC<Props> = ({ questions }) => {
       <div className="grid gap-2 grid-cols-2 place-content-start overflow-auto">
         {questions.map((question) => {
           return (
-            <Button
-              variant="secondary"
-              size="lg"
+            <button
               key={question.id}
               onClick={() => {
                 editorRef.current?.setValue(
@@ -67,7 +59,7 @@ export const App: React.FC<Props> = ({ questions }) => {
               }}
             >
               {question.title}
-            </Button>
+            </button>
           );
         })}
       </div>

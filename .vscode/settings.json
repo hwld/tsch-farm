@@ -1,1 +1,14 @@
-{}
+{
+    "editor.wordWrap": "on",
+    "tailwindCSS.classAttributes": [
+        ".*Class",
+        "className",
+        "classNames",
+    ],
+    "tailwindCSS.experimental.classRegex": [
+        [
+            "tv\\(([^)(]*(?:\\([^)(]*(?:\\([^)(]*(?:\\([^)(]*\\)[^)(]*)*\\)[^)(]*)*\\)[^)(]*)*)\\)",
+            "\"(.*?)\""
+        ]
+    ]
+}

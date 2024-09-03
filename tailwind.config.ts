@@ -1,67 +1,55 @@
 import type { Config } from "tailwindcss";
+import twColors from "tailwindcss/colors";
+
+const colors = {
+  gray: {
+    "50": "#f6f6f6",
+    "100": "#e7e7e7",
+    "200": "#d1d1d1",
+    "300": "#b0b0b0",
+    "400": "#888888",
+    "500": "#6d6d6d",
+    "600": "#5d5d5d",
+    "700": "#4f4f4f",
+    "800": "#454545",
+    "900": "#3d3d3d",
+    "950": "#262626",
+  },
+  primary: {
+    "50": "#f2f7fd",
+    "100": "#e5edf9",
+    "200": "#c5d9f2",
+    "300": "#91b9e8",
+    "400": "#5795d9",
+    "500": "#3178c6",
+    "600": "#215da8",
+    "700": "#1c4b88",
+    "800": "#1b4171",
+    "900": "#1c385e",
+    "950": "#12233f",
+  },
+};
 
 const config: Config = {
-    darkMode: ["class"],
-    content: [
+  darkMode: ["class"],
+  content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-  	extend: {
-  		backgroundImage: {
-  			'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-  			'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))'
-  		},
-  		borderRadius: {
-  			lg: 'var(--radius)',
-  			md: 'calc(var(--radius) - 2px)',
-  			sm: 'calc(var(--radius) - 4px)'
-  		},
-  		colors: {
-  			background: 'hsl(var(--background))',
-  			foreground: 'hsl(var(--foreground))',
-  			card: {
-  				DEFAULT: 'hsl(var(--card))',
-  				foreground: 'hsl(var(--card-foreground))'
-  			},
-  			popover: {
-  				DEFAULT: 'hsl(var(--popover))',
-  				foreground: 'hsl(var(--popover-foreground))'
-  			},
-  			primary: {
-  				DEFAULT: 'hsl(var(--primary))',
-  				foreground: 'hsl(var(--primary-foreground))'
-  			},
-  			secondary: {
-  				DEFAULT: 'hsl(var(--secondary))',
-  				foreground: 'hsl(var(--secondary-foreground))'
-  			},
-  			muted: {
-  				DEFAULT: 'hsl(var(--muted))',
-  				foreground: 'hsl(var(--muted-foreground))'
-  			},
-  			accent: {
-  				DEFAULT: 'hsl(var(--accent))',
-  				foreground: 'hsl(var(--accent-foreground))'
-  			},
-  			destructive: {
-  				DEFAULT: 'hsl(var(--destructive))',
-  				foreground: 'hsl(var(--destructive-foreground))'
-  			},
-  			border: 'hsl(var(--border))',
-  			input: 'hsl(var(--input))',
-  			ring: 'hsl(var(--ring))',
-  			chart: {
-  				'1': 'hsl(var(--chart-1))',
-  				'2': 'hsl(var(--chart-2))',
-  				'3': 'hsl(var(--chart-3))',
-  				'4': 'hsl(var(--chart-4))',
-  				'5': 'hsl(var(--chart-5))'
-  			}
-  		}
-  	}
+    colors: {
+      gray: colors.gray,
+      brand: colors.primary,
+      lime: twColors.lime,
+      yellow: twColors.yellow,
+      red: twColors.red,
+      purple: twColors.purple,
+      teal: twColors.teal,
+
+      border: colors.gray[600],
+    },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [],
 };
 export default config;
