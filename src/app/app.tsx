@@ -1,25 +1,57 @@
 "use client";
-import { Editor, Monaco } from "@monaco-editor/react";
+import {
+  Editor,
+  Monaco,
+  useMonaco,
+  type EditorProps,
+} from "@monaco-editor/react";
 import type { Question } from "./page";
 import { useEffect, useRef } from "react";
-import type { editor } from "monaco-editor";
+import type { editor, Uri } from "monaco-editor";
 import { Button } from "@/components/ui/button";
 
 type Props = { questions: Question[] };
 
 export const App: React.FC<Props> = ({ questions }) => {
-  const ref = useRef<editor.IStandaloneCodeEditor | null>(null);
+  const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
+  const monacoRef = useRef<Monaco | null>(null);
+
+  const handleMount: EditorProps["onMount"] = async (editor, monaco) => {
+    editorRef.current = editor;
+    monacoRef.current = monaco;
+
+    monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+      ...monaco.languages.typescript.typescriptDefaults.getCompilerOptions(),
+      moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
+      module: monaco.languages.typescript.ModuleKind.ESNext,
+    });
+
+    const moduleName = "@type-challenges/utils";
+
+    const res = await fetch(`https://esm.sh/${moduleName}`);
+    const typeDefUrl = res.headers.get("x-typescript-types");
+    if (!typeDefUrl) {
+      return;
+    }
+
+    const typeDef = await (await fetch(typeDefUrl)).text();
+
+    monaco.editor.createModel(
+      typeDef,
+      "typescript",
+      monaco.Uri.parse(`file:///node_modules/${moduleName}/index.d.ts`)
+    );
+  };
 
   return (
     <div className="grid h-full grid-cols-[auto_1fr] gap-4 p-10 min-h-0">
       <Editor
+        path="file:///tsch.ts"
         width={800}
         height={800}
         language="typescript"
         theme="vs-dark"
-        onMount={(e) => {
-          ref.current = e;
-        }}
+        onMount={handleMount}
       />
       <div className="grid gap-2 grid-cols-2 place-content-start overflow-auto">
         {questions.map((question) => {
@@ -29,7 +61,7 @@ export const App: React.FC<Props> = ({ questions }) => {
               size="lg"
               key={question.id}
               onClick={() => {
-                ref.current?.setValue(
+                editorRef.current?.setValue(
                   questions.find((q) => q.id === question.id)!.code
                 );
               }}
