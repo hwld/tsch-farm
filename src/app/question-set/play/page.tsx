@@ -76,7 +76,7 @@ const Page: React.FC = () => {
         </div>
       </div>
       <div className="grid grid-rows-[min-content_1fr_min-content] min-h-0 border border-border rounded-lg overflow-hidden">
-        <div className="p-4 border-b border-border font-bold text-lg grid grid-cols-[min-content_1fr] gap-2">
+        <div className="p-4 border-b border-border font-bold grid grid-cols-[min-content_1fr] gap-2">
           <IconBoxMultiple className="text-gray-200" />
           {questionSet.title}
         </div>

@@ -3,7 +3,7 @@ import { Editor, type EditorProps, type Monaco } from "@monaco-editor/react";
 import type { editor } from "monaco-editor";
 import { useEffect, useRef } from "react";
 import { useTypeDefs } from "./providers";
-import { IconLoader2 } from "@tabler/icons-react";
+import { IconCode, IconLoader2 } from "@tabler/icons-react";
 
 type Props = { question: Question };
 
@@ -50,17 +50,22 @@ export const TschEditor: React.FC<Props> = ({ question }) => {
   }, []);
 
   return (
-    typeDefs && (
-      <Editor
-        options={{ automaticLayout: true }}
-        path={`file:///${question.title}.ts`}
-        language="typescript"
-        theme="vs-dark"
-        className="border border-border rounded-lg overflow-hidden"
-        onMount={handleMount}
-        defaultValue={question.code}
-        loading={<IconLoader2 className="animate-spin size-8" />}
-      />
-    )
+    <div className="size-full bg-[#1e1e1e] border-border border rounded-lg overflow-hidden grid grid-rows-[min-content_1fr]">
+      <div className="p-2 text-xs flex gap-1 items-center bg-gray-900">
+        <IconCode className="size-4" />
+        Code
+      </div>
+      {typeDefs && (
+        <Editor
+          options={{ automaticLayout: true }}
+          path={`file:///${question.title}.ts`}
+          language="typescript"
+          theme="vs-dark"
+          onMount={handleMount}
+          defaultValue={question.code}
+          loading={<IconLoader2 className="animate-spin size-8" />}
+        />
+      )}
+    </div>
   );
 };
