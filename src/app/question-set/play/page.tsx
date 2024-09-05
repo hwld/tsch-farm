@@ -51,13 +51,12 @@ const Page: React.FC = () => {
   };
 
   return (
-    <div className="grid-cols-[80%_1fr] grid p-4 gap-4 overflow-y-hidden">
-      <div className="grid grid-rows-[1fr_min-content] gap-4">
-        <div>
+    <div className="grid-cols-[1fr_300px] min-h-0 min-w-0 grid p-4 gap-4 overflow-y-hidden">
+      <div className="grid grid-rows-[1fr_min-content] min-h-0 min-w-0 gap-4">
+        <div className="overflow-hidden">
           {currentQuestion && <TschEditor question={currentQuestion} />}
         </div>
         <div className="flex justify-between">
-          <Button onClick={handleEnd}>中止する</Button>
           <div className="space-x-2 flex justify-end">
             <Button disabled={!hasPrevQuestion} onClick={handleGoPrevQuestion}>
               前の問題へ
@@ -73,6 +72,7 @@ const Page: React.FC = () => {
               <Button onClick={handleEnd}>終了する</Button>
             )}
           </div>
+          <Button onClick={handleEnd}>中止する</Button>
         </div>
       </div>
       <div className="grid grid-rows-[min-content_1fr_min-content] min-h-0 border border-border rounded-lg overflow-hidden">

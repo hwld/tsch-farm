@@ -52,9 +52,8 @@ export const TschEditor: React.FC<Props> = ({ question }) => {
   return (
     typeDefs && (
       <Editor
+        options={{ automaticLayout: true }}
         path={`file:///${question.title}.ts`}
-        width="100%"
-        height="100%"
         language="typescript"
         theme="vs-dark"
         className="border border-border rounded-lg overflow-hidden"
