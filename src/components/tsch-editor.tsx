@@ -3,6 +3,7 @@ import { Editor, type EditorProps, type Monaco } from "@monaco-editor/react";
 import type { editor } from "monaco-editor";
 import { useEffect, useRef } from "react";
 import { useTypeDefs } from "./providers";
+import { IconLoader2 } from "@tabler/icons-react";
 
 type Props = { question: Question };
 
@@ -59,6 +60,7 @@ export const TschEditor: React.FC<Props> = ({ question }) => {
         className="border border-border rounded-lg overflow-hidden"
         onMount={handleMount}
         defaultValue={question.code}
+        loading={<IconLoader2 className="animate-spin size-8" />}
       />
     )
   );

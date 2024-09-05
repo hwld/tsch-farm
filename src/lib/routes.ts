@@ -1,7 +1,6 @@
-import { useSearchParams } from "next/navigation";
-import { questionSetQuerySchema, type QuestionSetQuery } from "./question";
+import { type QuestionSetQuery } from "./question";
 
-const playQuestionSetQueryName = "query";
+export const playQuestionSetQueryName = "query";
 
 export const Routes = {
   home: () => `/` as const,
@@ -19,12 +18,3 @@ export const Routes = {
     return `/question/play?${query.toString()}` as const;
   },
 } as const;
-
-export const usePlayQuestionSetQuery = () => {
-  const queryRaw = useSearchParams().get(playQuestionSetQueryName);
-  if (!queryRaw) {
-    throw new Error("queryが存在しません");
-  }
-
-  return questionSetQuerySchema.parse(JSON.parse(queryRaw));
-};
