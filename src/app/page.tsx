@@ -6,6 +6,7 @@ import { QuestionSetCard } from "@/components/question-set-card";
 import { QuestionToggle } from "@/components/question-toggle";
 import type { Question, QuestionSet } from "@/lib/question";
 import { Routes } from "@/lib/routes";
+import { IconPlayerPlay, IconPlayerPlayFilled } from "@tabler/icons-react";
 import { useState } from "react";
 
 export default function Page() {
@@ -38,12 +39,12 @@ export default function Page() {
       <div className="grid grid-cols-[1fr_1fr] p-10 gap-4 min-h-0 h-full w-full">
         <div className="grid grid-rows-[min-content_1fr] gap-6">
           <div className="space-y-1">
-            <div>問題セット</div>
-            <div className="text-sm text-gray-200">
+            <div className="text-base">問題セット</div>
+            <div className="text-gray-300">
               複数の問題がまとめられた問題セットを一つ選んで挑戦することができます
             </div>
           </div>
-          <div className=" border-border rounded-lg space-y-3">
+          <div className=" border-border rounded-lg grid grid-cols-[repeat(auto-fit,minmax(400px,1fr))] auto-rows-min gap-2">
             {questionSets.map((set) => {
               if (!set.questions.length) {
                 return null;
@@ -54,7 +55,9 @@ export default function Page() {
           </div>
         </div>
         <div className="border rounded-lg border-border grid grid-rows-[min-content_1fr_min-content] min-h-0 overflow-hidden">
-          <div className="p-4 bg-gray-900">問題を選択して始める</div>
+          <div className="px-4 bg-gray-800 border-b border-border text-base h-12 flex items-center">
+            問題を選んで始める
+          </div>
           <div className="flex gap-2 flex-wrap overflow-auto p-4">
             {questions.map((q) => {
               return (
@@ -77,8 +80,9 @@ export default function Page() {
               );
             })}
           </div>
-          <div className="p-4 flex justify-end bg-gray-900">
+          <div className="px-4 h-12 items-center flex justify-end bg-gray-800 border-t border-border">
             <ButtonLink
+              leftIcon={IconPlayerPlayFilled}
               href={Routes.playQuestionSet({
                 title: "選んだ問題",
                 questionIds: Array.from(selected.values()),

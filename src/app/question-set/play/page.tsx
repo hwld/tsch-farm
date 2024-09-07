@@ -1,9 +1,15 @@
 "use client";
 
-import { Button } from "@/components/button";
+import { Button, ButtonGroup } from "@/components/button";
 import { TschEditor } from "@/components/tsch-editor";
 import { usePlayQuestionSet } from "@/components/use-play-question-set";
-import { IconBoxMultiple, IconCode } from "@tabler/icons-react";
+import {
+  IconBoxMultiple,
+  IconChevronLeft,
+  IconChevronRight,
+  IconCode,
+  IconX,
+} from "@tabler/icons-react";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -52,32 +58,39 @@ const Page: React.FC = () => {
 
   return (
     <div className="grid-cols-[1fr_300px] min-h-0 min-w-0 grid p-4 gap-4 overflow-y-hidden">
-      <div className="grid grid-rows-[1fr_min-content] min-h-0 min-w-0 gap-4">
-        <div className="overflow-hidden">
-          {currentQuestion && <TschEditor question={currentQuestion} />}
-        </div>
-        <div className="flex justify-between">
-          <div className="space-x-2 flex justify-end">
-            <Button disabled={!hasPrevQuestion} onClick={handleGoPrevQuestion}>
-              前の問題へ
-            </Button>
-            {hasNextQuestion ? (
-              <Button
-                disabled={!hasNextQuestion}
-                onClick={handleGoNextQuestion}
-              >
-                次の問題へ
-              </Button>
-            ) : (
-              <Button onClick={handleEnd}>終了する</Button>
-            )}
-          </div>
-          <Button onClick={handleEnd}>中止する</Button>
-        </div>
+      <div className="overflow-hidden">
+        {currentQuestion && (
+          <TschEditor
+            question={currentQuestion}
+            footer={
+              <>
+                <ButtonGroup>
+                  <Button
+                    color="secondary"
+                    disabled={!hasPrevQuestion}
+                    onClick={handleGoPrevQuestion}
+                  >
+                    <IconChevronLeft className="size-5" />
+                  </Button>
+                  <Button
+                    color="secondary"
+                    disabled={!hasNextQuestion}
+                    onClick={handleGoNextQuestion}
+                  >
+                    <IconChevronRight className="size-5" />
+                  </Button>
+                </ButtonGroup>
+                <Button color="secondary" leftIcon={IconX} onClick={handleEnd}>
+                  終了する
+                </Button>
+              </>
+            }
+          />
+        )}
       </div>
       <div className="grid grid-rows-[min-content_1fr_min-content] min-h-0 border border-border rounded-lg overflow-hidden">
-        <div className="p-4 border-b border-border font-bold grid grid-cols-[min-content_1fr] gap-2">
-          <IconBoxMultiple className="text-gray-200" />
+        <div className="px-4 border-b border-border text-base flex items-center h-12 gap-2 bg-gray-800">
+          <IconBoxMultiple className="size-5" />
           {questionSet.title}
         </div>
         <div className="flex flex-col overflow-auto">
@@ -88,8 +101,10 @@ const Page: React.FC = () => {
                 key={q.id}
                 id={getQuestionId(q.id)}
                 className={clsx(
-                  "border-b border-border p-2 text-sm text-start grid grid-cols-[min-content_1fr] gap-1 items-center",
-                  currentQuestion?.id === q.id && "bg-gray-700"
+                  "border-b border-border p-2 text-start grid grid-cols-[min-content_1fr] gap-1 items-center transition-colors",
+                  currentQuestion?.id === q.id
+                    ? "bg-gray-700"
+                    : "hover:bg-gray-800"
                 )}
                 onClick={() => {
                   setCurrentQuestionIndex(index);

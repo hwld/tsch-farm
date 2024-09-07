@@ -2,7 +2,7 @@ import type { Question } from "@/lib/question";
 import { tv } from "tailwind-variants";
 
 const badge = tv({
-  base: "bg-gray-900 rounded overflow-hidden h-5 flex items-center border text-xs",
+  base: "rounded overflow-hidden h-5 flex items-center border text-xs",
   slots: {
     difficulty: "px-2 h-full flex items-center",
     count: "px-2 h-full flex items-center",

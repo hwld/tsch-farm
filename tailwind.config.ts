@@ -2,19 +2,6 @@ import type { Config } from "tailwindcss";
 import twColors from "tailwindcss/colors";
 
 const colors = {
-  gray: {
-    "50": "#f6f6f6",
-    "100": "#e7e7e7",
-    "200": "#d1d1d1",
-    "300": "#b0b0b0",
-    "400": "#888888",
-    "500": "#6d6d6d",
-    "600": "#5d5d5d",
-    "700": "#4f4f4f",
-    "800": "#454545",
-    "900": "#3d3d3d",
-    "950": "#262626",
-  },
   primary: {
     "50": "#f2f7fd",
     "100": "#e5edf9",
@@ -39,7 +26,7 @@ const config: Config = {
   ],
   theme: {
     colors: {
-      gray: colors.gray,
+      gray: twColors.zinc,
       brand: colors.primary,
       lime: twColors.lime,
       yellow: twColors.yellow,
@@ -47,7 +34,7 @@ const config: Config = {
       purple: twColors.purple,
       teal: twColors.teal,
 
-      border: colors.gray[600],
+      border: twColors.zinc[600],
     },
   },
   plugins: [],

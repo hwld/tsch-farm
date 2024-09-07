@@ -18,10 +18,10 @@ export const QuestionSetCard: React.FC<Props> = ({ questionSet }) => {
         title: questionSet.title,
         questionIds: questionSet.questions.map((q) => q.id),
       })}
-      className="text-start w-full border rounded-lg p-4 text-brand-100 grid grid-rows-[1fr_min-content] gap-4 shadow-lg transition-colors border-gray-500 hover:bg-gray-900"
+      className="text-start w-full border rounded-lg p-4 grid grid-rows-[1fr_min-content] gap-4 shadow-lg transition-colors border-border hover:bg-gray-800"
     >
       <div className="font-bold text-lg grid grid-cols-[min-content_1fr] items-center gap-2">
-        <IconBoxMultiple className="text-gray-200" />
+        <IconBoxMultiple />
         {questionSet.title}
       </div>
       <div className="flex gap-2">

@@ -1,13 +1,16 @@
 import type { Question } from "@/lib/question";
 import { Editor, type EditorProps, type Monaco } from "@monaco-editor/react";
 import type { editor } from "monaco-editor";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 import { useTypeDefs } from "./providers";
 import { IconCode, IconLoader2 } from "@tabler/icons-react";
 
-type Props = { question: Question };
+type Props = {
+  question: Question;
+  footer: ReactNode;
+};
 
-export const TschEditor: React.FC<Props> = ({ question }) => {
+export const TschEditor: React.FC<Props> = ({ question, footer }) => {
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
   const monacoRef = useRef<Monaco | null>(null);
 
@@ -50,8 +53,8 @@ export const TschEditor: React.FC<Props> = ({ question }) => {
   }, []);
 
   return (
-    <div className="size-full bg-[#1e1e1e] border-border border rounded-lg overflow-hidden grid grid-rows-[min-content_1fr]">
-      <div className="p-2 text-xs flex gap-1 items-center bg-gray-900">
+    <div className="size-full bg-[#1e1e1e] border-border border rounded-lg overflow-hidden grid grid-rows-[min-content_1fr_min-content] min-w-0">
+      <div className="p-2 text-xs flex gap-1 items-center bg-gray-800 border-border border-b">
         <IconCode className="size-4" />
         Code
       </div>
@@ -64,8 +67,20 @@ export const TschEditor: React.FC<Props> = ({ question }) => {
           onMount={handleMount}
           defaultValue={question.code}
           loading={<IconLoader2 className="animate-spin size-8" />}
+          className="min-h-0"
+          wrapperProps={{
+            style: {
+              display: "flex",
+              position: "relative",
+              textAlign: "initial",
+              width: "100%",
+              height: "100%",
+              minWidth: "0px",
+            } satisfies CSSProperties,
+          }}
         />
       )}
+      <div className="p-2 h-12 flex justify-between items-center">{footer}</div>
     </div>
   );
 };
