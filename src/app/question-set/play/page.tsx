@@ -1,7 +1,8 @@
 "use client";
 
 import { Button, ButtonGroup } from "@/components/button";
-import { TschEditor } from "@/components/tsch-editor";
+import { Tooltip } from "@/components/tooltip";
+import { TschEditor, type TschEditorCommand } from "@/components/tsch-editor";
 import { usePlayQuestionSet } from "@/components/use-play-question-set";
 import {
   IconBoxMultiple,
@@ -11,8 +12,9 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import clsx from "clsx";
+import { KeyCode, KeyMod } from "monaco-editor";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 const getQuestionId = (id: number) => `question-${id}`;
 
@@ -30,7 +32,7 @@ const Page: React.FC = () => {
   };
 
   const hasPrevQuestion = currentQuestionIndex > 0;
-  const handleGoPrevQuestion = () => {
+  const handleGoPrevQuestion = useCallback(() => {
     if (!hasPrevQuestion) {
       return;
     }
@@ -38,11 +40,11 @@ const Page: React.FC = () => {
     const newIndex = currentQuestionIndex - 1;
     setCurrentQuestionIndex(newIndex);
     focusQuestion(questionSet.questions[newIndex].id);
-  };
+  }, [currentQuestionIndex, hasPrevQuestion, questionSet.questions]);
 
   const hasNextQuestion =
     currentQuestionIndex < questionSet.questions.length - 1;
-  const handleGoNextQuestion = () => {
+  const handleGoNextQuestion = useCallback(() => {
     if (!hasNextQuestion) {
       return;
     }
@@ -50,39 +52,71 @@ const Page: React.FC = () => {
     const newIndex = currentQuestionIndex + 1;
     setCurrentQuestionIndex(newIndex);
     focusQuestion(questionSet.questions[newIndex].id);
-  };
+  }, [currentQuestionIndex, hasNextQuestion, questionSet.questions]);
 
   const handleEnd = () => {
     router.back();
   };
+
+  const tschEditorCommands: TschEditorCommand[] = [
+    {
+      key: KeyMod.CtrlCmd | KeyCode.Enter,
+      handler: () => {
+        handleGoNextQuestion();
+      },
+    },
+    {
+      key: KeyMod.Shift | KeyMod.CtrlCmd | KeyCode.Enter,
+      handler: () => {
+        handleGoPrevQuestion();
+      },
+    },
+    {
+      key: KeyCode.Escape,
+      handler: () => {
+        handleEnd();
+      },
+    },
+  ];
 
   return (
     <div className="grid-cols-[1fr_300px] min-h-0 min-w-0 grid p-4 gap-4 overflow-y-hidden">
       <div className="overflow-hidden">
         {currentQuestion && (
           <TschEditor
+            commands={tschEditorCommands}
             question={currentQuestion}
             footer={
               <>
                 <ButtonGroup>
-                  <Button
-                    color="secondary"
-                    disabled={!hasPrevQuestion}
-                    onClick={handleGoPrevQuestion}
-                  >
-                    <IconChevronLeft className="size-5" />
-                  </Button>
-                  <Button
-                    color="secondary"
-                    disabled={!hasNextQuestion}
-                    onClick={handleGoNextQuestion}
-                  >
-                    <IconChevronRight className="size-5" />
-                  </Button>
+                  <Tooltip label="前の問題へ (Shift+Cmd+Enter)">
+                    <Button
+                      color="secondary"
+                      isDisabled={!hasPrevQuestion}
+                      onPress={handleGoPrevQuestion}
+                    >
+                      <IconChevronLeft className="size-5" />
+                    </Button>
+                  </Tooltip>
+                  <Tooltip label="次の問題へ (Cmd+Enter)">
+                    <Button
+                      color="secondary"
+                      isDisabled={!hasNextQuestion}
+                      onPress={handleGoNextQuestion}
+                    >
+                      <IconChevronRight className="size-5" />
+                    </Button>
+                  </Tooltip>
                 </ButtonGroup>
-                <Button color="secondary" leftIcon={IconX} onClick={handleEnd}>
-                  終了する
-                </Button>
+                <Tooltip label="問題を終了する (Esc)">
+                  <Button
+                    color="secondary"
+                    leftIcon={IconX}
+                    onPress={handleEnd}
+                  >
+                    終了する
+                  </Button>
+                </Tooltip>
               </>
             }
           />

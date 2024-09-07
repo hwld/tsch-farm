@@ -1,12 +1,12 @@
 "use client";
 
-import { Button, ButtonLink } from "@/components/button";
+import { ButtonLink } from "@/components/button";
 import { useQuestions } from "@/components/providers";
 import { QuestionSetCard } from "@/components/question-set-card";
 import { QuestionToggle } from "@/components/question-toggle";
 import type { Question, QuestionSet } from "@/lib/question";
 import { Routes } from "@/lib/routes";
-import { IconPlayerPlay, IconPlayerPlayFilled } from "@tabler/icons-react";
+import { IconPlayerPlayFilled } from "@tabler/icons-react";
 import { useState } from "react";
 
 export default function Page() {
@@ -87,7 +87,7 @@ export default function Page() {
                 title: "選んだ問題",
                 questionIds: Array.from(selected.values()),
               })}
-              disabled={selected.size === 0}
+              isDisabled={selected.size === 0}
             >
               開始する
             </ButtonLink>

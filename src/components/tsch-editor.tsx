@@ -5,12 +5,22 @@ import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 import { useTypeDefs } from "./providers";
 import { IconCode, IconLoader2 } from "@tabler/icons-react";
 
+export type TschEditorCommand = {
+  key: number;
+  handler: () => void;
+};
+
 type Props = {
   question: Question;
   footer: ReactNode;
+  commands?: TschEditorCommand[];
 };
 
-export const TschEditor: React.FC<Props> = ({ question, footer }) => {
+export const TschEditor: React.FC<Props> = ({
+  question,
+  footer,
+  commands = [],
+}) => {
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
   const monacoRef = useRef<Monaco | null>(null);
 
@@ -38,7 +48,25 @@ export const TschEditor: React.FC<Props> = ({ question, footer }) => {
         monaco.Uri.parse(`file:///node_modules/${moduleName}/index.d.ts`)
       );
     });
+
+    // マウント時にしか追加されないので、commandsが変更したときにも追加する必要がある
+    commands.forEach(({ key, handler }) => {
+      editor.addCommand(key, handler);
+    });
   };
+
+  // commandsが変更されたときに、コマンドを追加し直す
+  useEffect(() => {
+    const editor = editorRef.current;
+    if (!editor) {
+      return;
+    }
+
+    commands.forEach(({ key, handler }) => {
+      // monacoのドキュメントには書いてなかったけど、コマンドは追記じゃなくて上書きの形で追加されることに依存してる
+      editor.addCommand(key, handler);
+    });
+  }, [commands]);
 
   useEffect(() => {
     return () => {

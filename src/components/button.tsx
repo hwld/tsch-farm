@@ -1,16 +1,16 @@
 import type { Icon } from "@tabler/icons-react";
 import type { LinkProps } from "next/link";
 import Link from "next/link";
-import type {
-  ComponentPropsWithoutRef,
-  PropsWithChildren,
-  ReactNode,
-} from "react";
+import { forwardRef, type PropsWithChildren, type ReactNode } from "react";
 import { tv, type VariantProps } from "tailwind-variants";
+import {
+  Button as RaButton,
+  ButtonProps as RaButtonProps,
+} from "react-aria-components";
 
 const button = tv({
   slots: {
-    base: "h-8 px-3 rounded transition-colors min-w-[50px] flex justify-center items-center gap-1 text-nowrap select-none",
+    base: "h-8 px-3 rounded transition-colors min-w-[50px] flex justify-center items-center gap-1 text-nowrap select-none outline-none data-[focus-visible]:ring-2 ring-gray-100",
     leftIcon: "size-4",
   },
   variants: {
@@ -21,7 +21,7 @@ const button = tv({
         leftIcon: "",
       },
     },
-    disabled: { true: "opacity-50 pointer-events-none", false: "" },
+    isDisabled: { true: "opacity-50 pointer-events-none", false: "" },
   },
   defaultVariants: { color: "primary" },
 });
@@ -31,44 +31,47 @@ type ButtonBaseProps = VariantProps<typeof button> & {
   children: ReactNode;
 };
 
-type ButtonProps = ButtonBaseProps &
-  Omit<ComponentPropsWithoutRef<"button">, "className">;
+type ButtonProps = ButtonBaseProps & Omit<RaButtonProps, "className">;
 
-export const Button: React.FC<ButtonProps> = ({
-  color,
-  disabled,
-  leftIcon: LeftIcon,
-  children,
-  ...props
-}) => {
-  const classes = button({ color, disabled });
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  function Button(
+    { color, isDisabled, leftIcon: LeftIcon, children, ...props },
+    ref
+  ) {
+    const classes = button({ color, isDisabled });
 
-  return (
-    <button {...props} disabled={disabled} className={classes.base()}>
-      {LeftIcon && <LeftIcon className={classes.leftIcon()} />}
-      {children}
-    </button>
-  );
-};
+    return (
+      <RaButton
+        ref={ref}
+        {...props}
+        isDisabled={isDisabled}
+        className={classes.base()}
+      >
+        {LeftIcon && <LeftIcon className={classes.leftIcon()} />}
+        {children}
+      </RaButton>
+    );
+  }
+);
 
 type ButtonLinkProps = ButtonBaseProps & LinkProps;
 
-export const ButtonLink: React.FC<ButtonLinkProps> = ({
-  color,
-  disabled,
-  leftIcon: LeftIcon,
-  children,
-  ...props
-}) => {
-  const classes = button({ color, disabled });
+export const ButtonLink: React.FC<ButtonLinkProps> = forwardRef<
+  HTMLAnchorElement,
+  ButtonLinkProps
+>(function ButtonLink(
+  { color, isDisabled, leftIcon: LeftIcon, children, ...props },
+  ref
+) {
+  const classes = button({ color, isDisabled });
 
   return (
-    <Link {...props} className={classes.base()}>
+    <Link ref={ref} {...props} className={classes.base()}>
       {LeftIcon && <LeftIcon className={classes.leftIcon()} />}
       {children}
     </Link>
   );
-};
+});
 
 export const ButtonGroup: React.FC<PropsWithChildren> = ({ children }) => {
   return (
