@@ -13,13 +13,19 @@ export type TschEditorCommand = {
 type Props = {
   question: Question;
   footer: ReactNode;
-  commands?: TschEditorCommand[];
+
+  /**
+   *  TschEditorCommand[]を直接受け取ることもできるのだが、KeyCodeやKeyModをmonaco-editorからimportすると、
+   *  なぜかビルドが失敗したり開発サーバーが遅くなるので、Monacoを受け取ってmonaco.KeyCodeやmonaco.KeyModを使用させるために
+   *  コマンドを返す関数を受け取る
+   */
+  buildCommands?: (monaco: Monaco) => TschEditorCommand[];
 };
 
 export const TschEditor: React.FC<Props> = ({
   question,
   footer,
-  commands = [],
+  buildCommands,
 }) => {
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
   const monacoRef = useRef<Monaco | null>(null);
@@ -50,7 +56,7 @@ export const TschEditor: React.FC<Props> = ({
     });
 
     // マウント時にしか追加されないので、commandsが変更したときにも追加する必要がある
-    commands.forEach(({ key, handler }) => {
+    buildCommands?.(monaco).forEach(({ key, handler }) => {
       editor.addCommand(key, handler);
     });
   };
@@ -58,15 +64,16 @@ export const TschEditor: React.FC<Props> = ({
   // commandsが変更されたときに、コマンドを追加し直す
   useEffect(() => {
     const editor = editorRef.current;
-    if (!editor) {
+    const monaco = monacoRef.current;
+    if (!editor || !monaco) {
       return;
     }
 
-    commands.forEach(({ key, handler }) => {
+    buildCommands?.(monaco).forEach(({ key, handler }) => {
       // monacoのドキュメントには書いてなかったけど、コマンドは追記じゃなくて上書きの形で追加されることに依存してる
       editor.addCommand(key, handler);
     });
-  }, [commands]);
+  }, [buildCommands]);
 
   useEffect(() => {
     return () => {

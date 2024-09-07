@@ -2,8 +2,9 @@
 
 import { Button, ButtonGroup } from "@/components/button";
 import { Tooltip } from "@/components/tooltip";
-import { TschEditor, type TschEditorCommand } from "@/components/tsch-editor";
+import { TschEditor } from "@/components/tsch-editor";
 import { usePlayQuestionSet } from "@/components/use-play-question-set";
+import type { Monaco } from "@monaco-editor/react";
 import {
   IconBoxMultiple,
   IconChevronLeft,
@@ -12,7 +13,6 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import clsx from "clsx";
-import { KeyCode, KeyMod } from "monaco-editor";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 
@@ -54,37 +54,40 @@ const Page: React.FC = () => {
     focusQuestion(questionSet.questions[newIndex].id);
   }, [currentQuestionIndex, hasNextQuestion, questionSet.questions]);
 
-  const handleEnd = () => {
+  const handleEnd = useCallback(() => {
     router.back();
-  };
+  }, [router]);
 
-  const tschEditorCommands: TschEditorCommand[] = [
-    {
-      key: KeyMod.CtrlCmd | KeyCode.Enter,
-      handler: () => {
-        handleGoNextQuestion();
+  const buildTschEditorCommands = useCallback(
+    (monaco: Monaco) => [
+      {
+        key: monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter,
+        handler: () => {
+          handleGoNextQuestion();
+        },
       },
-    },
-    {
-      key: KeyMod.Shift | KeyMod.CtrlCmd | KeyCode.Enter,
-      handler: () => {
-        handleGoPrevQuestion();
+      {
+        key: monaco.KeyMod.Shift | monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter,
+        handler: () => {
+          handleGoPrevQuestion();
+        },
       },
-    },
-    {
-      key: KeyCode.Escape,
-      handler: () => {
-        handleEnd();
+      {
+        key: monaco.KeyCode.Escape,
+        handler: () => {
+          handleEnd();
+        },
       },
-    },
-  ];
+    ],
+    [handleEnd, handleGoNextQuestion, handleGoPrevQuestion]
+  );
 
   return (
     <div className="grid-cols-[1fr_300px] min-h-0 min-w-0 grid p-4 gap-4 overflow-y-hidden">
       <div className="overflow-hidden">
         {currentQuestion && (
           <TschEditor
-            commands={tschEditorCommands}
+            buildCommands={buildTschEditorCommands}
             question={currentQuestion}
             footer={
               <>
