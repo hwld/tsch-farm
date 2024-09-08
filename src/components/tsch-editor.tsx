@@ -1,7 +1,13 @@
 import type { Question } from "@/lib/question";
 import { Editor, type EditorProps, type Monaco } from "@monaco-editor/react";
 import type { editor } from "monaco-editor";
-import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
 import { useTypeDefs } from "./providers";
 import { IconCode, IconLoader2 } from "@tabler/icons-react";
 
@@ -30,14 +36,12 @@ export const TschEditor: React.FC<Props> = ({
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
   const monacoRef = useRef<Monaco | null>(null);
 
+  // マウントしているときだけ実行したいuseEffectがあるので、そこで使用する
+  const [isMounted, setIsMounted] = useState(false);
+
   const typeDefs = useTypeDefs();
 
   const handleMount: EditorProps["onMount"] = async (editor, monaco) => {
-    // typeDefsがundefinedのときにhandleMountが実行されないように、条件分岐でレンダリングさせる必要がある
-    if (!typeDefs) {
-      return;
-    }
-
     editorRef.current = editor;
     monacoRef.current = monaco;
 
@@ -47,6 +51,37 @@ export const TschEditor: React.FC<Props> = ({
       module: monaco.languages.typescript.ModuleKind.ESNext,
     });
 
+    setIsMounted(true);
+  };
+
+  // commandsが変更されたときに、コマンドを追加し直す
+  useEffect(() => {
+    const editor = editorRef.current;
+    const monaco = monacoRef.current;
+    if (!isMounted || !editor || !monaco) {
+      return;
+    }
+
+    const commands = buildCommands?.(monaco);
+
+    commands?.forEach(({ key, handler }) => {
+      editor.addCommand(key, handler);
+    });
+
+    return () => {
+      commands?.forEach(({ key }) => {
+        editor.addCommand(key, () => {});
+      });
+    };
+  }, [buildCommands, isMounted]);
+
+  // typeDefsが変更されたときに、モデルを追加する
+  useEffect(() => {
+    if (!isMounted || !monacoRef.current || !typeDefs) {
+      return;
+    }
+    const monaco = monacoRef.current;
+
     Array.from(typeDefs.entries()).forEach(([moduleName, typeDef]) => {
       monaco.editor.createModel(
         typeDef,
@@ -55,33 +90,18 @@ export const TschEditor: React.FC<Props> = ({
       );
     });
 
-    // マウント時にしか追加されないので、commandsが変更したときにも追加する必要がある
-    buildCommands?.(monaco).forEach(({ key, handler }) => {
-      editor.addCommand(key, handler);
-    });
-  };
-
-  // commandsが変更されたときに、コマンドを追加し直す
-  useEffect(() => {
-    const editor = editorRef.current;
-    const monaco = monacoRef.current;
-    if (!editor || !monaco) {
-      return;
-    }
-
-    buildCommands?.(monaco).forEach(({ key, handler }) => {
-      // monacoのドキュメントには書いてなかったけど、コマンドは追記じゃなくて上書きの形で追加されることに依存してる
-      editor.addCommand(key, handler);
-    });
-  }, [buildCommands]);
+    return () => {
+      monaco.editor.getModels().forEach((m) => {
+        if (m.uri.path.startsWith("/node_modules")) {
+          m.dispose();
+        }
+      });
+    };
+  }, [isMounted, typeDefs]);
 
   useEffect(() => {
     return () => {
-      if (!monacoRef.current) {
-        return;
-      }
-
-      monacoRef.current.editor.getModels().forEach((m) => {
+      monacoRef.current?.editor.getModels().forEach((m) => {
         m.dispose();
       });
     };
@@ -93,28 +113,26 @@ export const TschEditor: React.FC<Props> = ({
         <IconCode className="size-4" />
         Code
       </div>
-      {typeDefs && (
-        <Editor
-          options={{ automaticLayout: true }}
-          path={`file:///${question.title}.ts`}
-          language="typescript"
-          theme="vs-dark"
-          onMount={handleMount}
-          defaultValue={question.code}
-          loading={<IconLoader2 className="animate-spin size-8" />}
-          className="min-h-0"
-          wrapperProps={{
-            style: {
-              display: "flex",
-              position: "relative",
-              textAlign: "initial",
-              width: "100%",
-              height: "100%",
-              minWidth: "0px",
-            } satisfies CSSProperties,
-          }}
-        />
-      )}
+      <Editor
+        options={{ automaticLayout: true }}
+        path={`file:///${question.title}.ts`}
+        language="typescript"
+        theme="vs-dark"
+        onMount={handleMount}
+        defaultValue={question.code}
+        loading={<IconLoader2 className="animate-spin size-8" />}
+        className="min-h-0"
+        wrapperProps={{
+          style: {
+            display: "flex",
+            position: "relative",
+            textAlign: "initial",
+            width: "100%",
+            height: "100%",
+            minWidth: "0px",
+          } satisfies CSSProperties,
+        }}
+      />
       <div className="p-2 h-12 flex justify-between items-center">{footer}</div>
     </div>
   );
