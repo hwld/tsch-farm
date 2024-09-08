@@ -19,7 +19,12 @@ const loadQuestions = async () => {
         return;
       }
 
-      await writeFile(join(questionsPath, `${q.id}.json`), JSON.stringify(q));
+      const question: Question = { ...q, code };
+
+      await writeFile(
+        join(questionsPath, `${q.id}.json`),
+        JSON.stringify(question)
+      );
     })
   );
 };
