@@ -1,6 +1,8 @@
 "use client";
 
-import { IconAlertCircle } from "@tabler/icons-react";
+import { ButtonLink } from "@/components/button";
+import { Routes } from "@/lib/routes";
+import { IconAlertCircle, IconHome } from "@tabler/icons-react";
 
 export default function Error() {
   return (
@@ -13,6 +15,9 @@ export default function Error() {
           ページをリロードして再度お試しください
         </p>
       </div>
+      <ButtonLink href={Routes.home()} leftIcon={IconHome}>
+        ホームに戻る
+      </ButtonLink>
     </div>
   );
 }

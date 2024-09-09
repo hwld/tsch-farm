@@ -20,8 +20,8 @@ export const QuestionSetCard: React.FC<Props> = ({ questionSet }) => {
       })}
       className="text-start w-full border rounded-lg p-4 grid grid-rows-[1fr_min-content] gap-4 shadow-lg transition-colors border-border hover:bg-gray-800"
     >
-      <div className="font-bold text-lg grid grid-cols-[min-content_1fr] items-center gap-2">
-        <IconBoxMultiple />
+      <div className="font-bold grid grid-cols-[min-content_1fr] items-center gap-1 text-base">
+        <IconBoxMultiple className="size-5" />
         {questionSet.title}
       </div>
       <div className="flex gap-2">

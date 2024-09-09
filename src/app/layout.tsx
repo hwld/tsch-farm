@@ -6,7 +6,6 @@ import { Sidebar } from "@/components/sidebar";
 import { Providers } from "@/components/providers";
 import { getQuestions } from "@/lib/get-questions";
 import { Suspense } from "react";
-import { IconLoader2 } from "@tabler/icons-react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -37,7 +36,7 @@ export default async function RootLayout({
           <div className="py-4 pr-4 grid min-h-0">
             <div className="grid rounded-lg overflow-hidden bg-gray-900">
               <div className="grid min-h-0 shadow-lg overflow-x-auto">
-                <Suspense fallback={<Loading />}>{children}</Suspense>
+                <Suspense>{children}</Suspense>
               </div>
             </div>
           </div>
@@ -46,11 +45,3 @@ export default async function RootLayout({
     </html>
   );
 }
-
-const Loading: React.FC = () => {
-  return (
-    <div className="grid place-items-center">
-      <IconLoader2 className="animate-spin size-10" />
-    </div>
-  );
-};

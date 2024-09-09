@@ -5,12 +5,6 @@ import { questionSetQuerySchema, type QuestionSet } from "@/lib/question";
 import { shuffle } from "@/lib/shuffle";
 import { useMemo } from "react";
 
-export class QuestionNotFound extends Error {
-  static {
-    this.prototype.name = "QuestionNotFound";
-  }
-}
-
 export const usePlayQuestionSet = () => {
   const allQuestions = useQuestions();
 
@@ -25,7 +19,7 @@ export const usePlayQuestionSet = () => {
     const questions = query.questionIds.map((questionId) => {
       const q = allQuestions.find((q) => q.id === questionId);
       if (!q) {
-        throw new QuestionNotFound("存在しない問題が含まれています");
+        throw new Error("存在しない問題が含まれています");
       }
       return q;
     });
