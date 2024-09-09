@@ -15,6 +15,7 @@ export const QuestionSetCard: React.FC<Props> = ({ questionSet }) => {
   return (
     <Link
       href={Routes.playQuestionSet({
+        id: questionSet.id,
         title: questionSet.title,
         questionIds: questionSet.questions.map((q) => q.id),
       })}

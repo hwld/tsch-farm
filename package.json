@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@mantine/hooks": "^7.12.2",
     "@monaco-editor/react": "^4.6.0",
     "@tabler/icons-react": "^3.14.0",
     "clsx": "^2.1.1",

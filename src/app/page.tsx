@@ -1,38 +1,31 @@
 "use client";
 
-import { ButtonLink } from "@/components/button";
+import { Button, ButtonLink } from "@/components/button";
 import { useQuestions } from "@/components/providers";
 import { QuestionSetCard } from "@/components/question-set-card";
 import { QuestionToggle } from "@/components/question-toggle";
-import type { Question, QuestionSet } from "@/lib/question";
+import { useQuestionSets } from "@/components/use-question-set";
 import { Routes } from "@/lib/routes";
 import { IconPlayerPlayFilled } from "@tabler/icons-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function Page() {
   const questions = useQuestions();
+  const { questionSets } = useQuestionSets();
 
   const [selected, setSelected] = useState<Set<number>>(new Set());
 
-  const questionsByDifficultyMap = questions.reduce((acc, curr) => {
-    const questions = acc.get(curr.difficulty) ?? [];
-    acc.set(curr.difficulty, [...questions, curr]);
-    return acc;
-  }, new Map<Question["difficulty"], Question[]>());
-
-  const questionSets: QuestionSet[] = [
-    { title: "Warm", questions: questionsByDifficultyMap.get("warm") ?? [] },
-    { title: "Easy", questions: questionsByDifficultyMap.get("easy") ?? [] },
-    {
-      title: "Medium",
-      questions: questionsByDifficultyMap.get("medium") ?? [],
-    },
-    { title: "Hard", questions: questionsByDifficultyMap.get("hard") ?? [] },
-    {
-      title: "Extreme",
-      questions: questionsByDifficultyMap.get("extreme") ?? [],
-    },
-  ] as const;
+  const router = useRouter();
+  const handlePlaySelection = () => {
+    router.push(
+      Routes.playQuestionSet({
+        id: crypto.randomUUID(),
+        title: "選んだ問題",
+        questionIds: Array.from(selected),
+      })
+    );
+  };
 
   return (
     <div className="grid place-items-center min-h-0">
@@ -86,16 +79,13 @@ export default function Page() {
             })}
           </div>
           <div className="px-2 h-12 items-center flex justify-end bg-gray-800 border-t border-border">
-            <ButtonLink
+            <Button
               leftIcon={IconPlayerPlayFilled}
-              href={Routes.playQuestionSet({
-                title: "選んだ問題",
-                questionIds: Array.from(selected.values()),
-              })}
               isDisabled={selected.size === 0}
+              onPress={handlePlaySelection}
             >
               開始する
-            </ButtonLink>
+            </Button>
           </div>
         </div>
       </div>

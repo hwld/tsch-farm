@@ -1,10 +1,10 @@
-import { type QuestionSetQuery } from "./question";
+import { type QuestionSetSummary } from "./question";
 
 export const playQuestionSetQueryName = "query";
 
 export const Routes = {
   home: () => `/` as const,
-  playQuestionSet: (questionSetQuery: QuestionSetQuery) => {
+  playQuestionSet: (questionSetQuery: QuestionSetSummary) => {
     const query = new URLSearchParams();
     query.set(playQuestionSetQueryName, JSON.stringify(questionSetQuery));
 
