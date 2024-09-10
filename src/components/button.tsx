@@ -1,16 +1,16 @@
 import type { Icon } from "@tabler/icons-react";
-import type { LinkProps } from "next/link";
-import Link from "next/link";
 import { forwardRef, type PropsWithChildren, type ReactNode } from "react";
 import { tv, type VariantProps } from "tailwind-variants";
 import {
+  Link,
   Button as RaButton,
   ButtonProps as RaButtonProps,
+  type LinkProps,
 } from "react-aria-components";
 
 const button = tv({
   slots: {
-    base: "h-8 px-3 rounded transition-colors flex justify-center items-center gap-1 text-nowrap select-none outline-none data-[focus-visible]:ring-2 ring-gray-100 min-w-fit",
+    base: "h-8 px-3 rounded transition-colors flex justify-center items-center gap-1 text-nowrap select-none outline-none data-[focus-visible]:ring-2 ring-brand-300 min-w-fit",
     leftIcon: "size-4",
   },
   variants: {

@@ -18,7 +18,7 @@ import { useCallback, useState } from "react";
 
 const getQuestionId = (id: number) => `question-${id}`;
 
-const Page: React.FC = () => {
+const PlayQuestionSetPage: React.FC = () => {
   const router = useRouter();
   const questionSet = usePlayQuestionSet();
 
@@ -125,7 +125,7 @@ const Page: React.FC = () => {
           />
         )}
       </div>
-      <div className="grid grid-rows-[min-content_1fr_min-content] min-h-0 border border-border rounded-lg overflow-hidden">
+      <div className="grid grid-rows-[auto_1fr_auto] min-h-0 border border-border rounded-lg overflow-hidden">
         <div className="px-4 border-b border-border text-base flex items-center h-12 gap-2 bg-gray-800">
           <IconBoxMultiple className="size-5" />
           {questionSet.title}
@@ -138,7 +138,7 @@ const Page: React.FC = () => {
                 key={q.id}
                 id={getQuestionId(q.id)}
                 className={clsx(
-                  "border-b border-border p-2 text-start grid grid-cols-[min-content_1fr] gap-1 items-center transition-colors",
+                  "border-b border-border p-2 text-start grid grid-cols-[auto_1fr] gap-1 items-center transition-colors",
                   currentQuestion?.id === q.id
                     ? "bg-gray-700"
                     : "hover:bg-gray-800"
@@ -158,4 +158,4 @@ const Page: React.FC = () => {
   );
 };
 
-export default Page;
+export default PlayQuestionSetPage;

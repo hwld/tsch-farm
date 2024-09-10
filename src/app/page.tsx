@@ -6,11 +6,16 @@ import { QuestionSetCard } from "@/components/question-set-card";
 import { QuestionToggle } from "@/components/question-toggle";
 import { useQuestionSets } from "@/components/use-question-set";
 import { Routes } from "@/lib/routes";
-import { IconPlayerPlayFilled } from "@tabler/icons-react";
+import {
+  IconPick,
+  IconPlayerPlayFilled,
+  IconSelect,
+  IconStack2,
+} from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export default function Page() {
+export default function HomePage() {
   const questions = useQuestions();
   const { questionSets } = useQuestionSets();
 
@@ -30,19 +35,25 @@ export default function Page() {
   return (
     <div className="grid place-items-center min-h-0">
       <div className="grid grid-cols-[1fr_1fr] p-10 gap-4 min-h-0 h-full w-full">
-        <div className="grid grid-rows-[min-content_1fr] rounded-lg border border-border overflow-hidden">
-          <div className="flex gap-4 items-start justify-between border-b border-border p-4 bg-gray-800">
+        <div className="grid grid-rows-[auto_1fr] rounded-lg border border-border overflow-hidden">
+          <div className="flex gap-4 items-end justify-between border-b border-border p-4 bg-gray-800">
             <div className="flex flex-col gap-2">
-              <div>問題セット</div>
+              <div className="grid grid-cols-[auto_1fr] items-center gap-1">
+                <IconStack2 className="size-5" /> 問題セット
+              </div>
               <div className="text-gray-300 text-xs">
                 複数の問題がまとめられた問題セットを一つ選んで挑戦することができます
               </div>
             </div>
-            <ButtonLink size="sm" color="secondary" href="/question-set/create">
-              問題セットを作成する
+            <ButtonLink
+              size="sm"
+              color="secondary"
+              href={Routes.createQuestionSet()}
+            >
+              作成する
             </ButtonLink>
           </div>
-          <div className=" border-border rounded-lg grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] auto-rows-min gap-2 p-4">
+          <div className="border-border rounded-lg grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] auto-rows-min gap-2 p-4 overflow-auto">
             {questionSets.map((set) => {
               if (!set.questions.length) {
                 return null;
@@ -52,8 +63,9 @@ export default function Page() {
             })}
           </div>
         </div>
-        <div className="border rounded-lg border-border grid grid-rows-[min-content_1fr_min-content] min-h-0 overflow-hidden">
-          <div className="px-4 bg-gray-800 border-b border-border h-12 flex items-center">
+        <div className="border rounded-lg border-border grid grid-rows-[auto_1fr_auto] min-h-0 overflow-hidden">
+          <div className="px-4 bg-gray-800 border-b border-border h-12 flex items-center gap-1">
+            <IconSelect className="size-5" />
             問題を選んで始める
           </div>
           <div className="flex gap-2 flex-wrap overflow-auto p-4">

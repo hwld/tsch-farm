@@ -1,8 +1,8 @@
 import type { Question, QuestionSet } from "@/lib/question";
 import { QuestionDifficultyCountBadge } from "./question-difficulty-count-badge";
 import { IconBoxMultiple } from "@tabler/icons-react";
-import Link from "next/link";
 import { Routes } from "@/lib/routes";
+import { Link } from "react-aria-components";
 
 type Props = { questionSet: QuestionSet };
 
@@ -19,9 +19,9 @@ export const QuestionSetCard: React.FC<Props> = ({ questionSet }) => {
         title: questionSet.title,
         questionIds: questionSet.questions.map((q) => q.id),
       })}
-      className="text-start w-full border rounded-lg p-4 grid grid-rows-[1fr_min-content] gap-4 shadow-lg transition-colors border-border hover:bg-gray-800"
+      className="text-start w-full border rounded-lg p-4 grid grid-rows-[1fr_auto] gap-4 shadow-lg transition-colors border-border hover:bg-gray-800 outline-none data-[focus-visible]:ring-2 ring-brand-300"
     >
-      <div className="font-bold grid grid-cols-[min-content_1fr] items-center gap-1 text-base">
+      <div className="font-bold grid grid-cols-[auto_1fr] items-center gap-1 text-base">
         <IconBoxMultiple className="size-5" />
         {questionSet.title}
       </div>

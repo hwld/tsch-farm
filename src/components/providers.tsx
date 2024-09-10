@@ -1,6 +1,7 @@
 "use client";
 
 import type { Question } from "@/lib/question";
+import { useRouter } from "next/navigation";
 import {
   createContext,
   useContext,
@@ -8,6 +9,7 @@ import {
   useState,
   type PropsWithChildren,
 } from "react";
+import { RouterProvider } from "react-aria-components";
 
 const QuestionsContext = createContext<Question[] | undefined>(undefined);
 
@@ -32,6 +34,7 @@ export const useTypeDefs = () => {
 type Props = { value: Question[] } & PropsWithChildren;
 
 export const Providers: React.FC<Props> = ({ children, value }) => {
+  const router = useRouter();
   const [typeDef, setTypeDef] = useState<TypeDefs>(new Map());
 
   useEffect(() => {
@@ -52,10 +55,12 @@ export const Providers: React.FC<Props> = ({ children, value }) => {
   }, []);
 
   return (
-    <QuestionsContext.Provider value={value}>
-      <TypeDefsContext.Provider value={typeDef}>
-        {children}
-      </TypeDefsContext.Provider>
-    </QuestionsContext.Provider>
+    <RouterProvider navigate={router.push}>
+      <QuestionsContext.Provider value={value}>
+        <TypeDefsContext.Provider value={typeDef}>
+          {children}
+        </TypeDefsContext.Provider>
+      </QuestionsContext.Provider>
+    </RouterProvider>
   );
 };

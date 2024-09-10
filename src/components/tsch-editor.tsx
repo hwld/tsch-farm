@@ -108,7 +108,7 @@ export const TschEditor: React.FC<Props> = ({
   }, []);
 
   return (
-    <div className="size-full bg-[#1e1e1e] border-border border rounded-lg overflow-hidden grid grid-rows-[min-content_1fr_min-content] min-w-0">
+    <div className="size-full bg-[#1e1e1e] border-border border rounded-lg overflow-hidden grid grid-rows-[auto_1fr_auto] min-w-0">
       <div className="p-2 text-xs flex gap-1 items-center bg-gray-800 border-border border-b">
         <IconCode className="size-4" />
         Code

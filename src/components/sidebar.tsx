@@ -1,12 +1,12 @@
 "use client";
 
-import { IconHome, type Icon } from "@tabler/icons-react";
+import { IconHome, IconStack2, type Icon } from "@tabler/icons-react";
 import { AppIcon } from "./app-icon";
-import type { LinkProps } from "next/link";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
 import { Routes } from "@/lib/routes";
+import { Tooltip } from "./tooltip";
+import { Link, type LinkProps } from "react-aria-components";
 
 type Props = {};
 
@@ -20,34 +20,48 @@ export const Sidebar: React.FC<Props> = () => {
       <div className="flex flex-col items-center gap-2 grow">
         <SidebarLinkItem
           href={Routes.home()}
+          label="ホーム"
           currentPath={pathname}
           icon={IconHome}
+        />
+        <SidebarLinkItem
+          href={Routes.questionSets()}
+          label="問題セット一覧"
+          currentPath={pathname}
+          icon={IconStack2}
         />
       </div>
     </div>
   );
 };
 
-type SidebarLinkItemProps = LinkProps & { icon: Icon; currentPath: string };
+type SidebarLinkItemProps = LinkProps & {
+  icon: Icon;
+  currentPath: string;
+  label: string;
+};
 
 const SidebarLinkItem: React.FC<SidebarLinkItemProps> = ({
   icon: Icon,
   currentPath,
   href,
+  label,
   ...props
 }) => {
   return (
-    <Link
-      href={href}
-      {...props}
-      className={clsx(
-        "size-10 rounded-full grid place-items-center transition-colors",
-        href === currentPath
-          ? "bg-gray-100 text-brand-500"
-          : "hover:bg-brand-400"
-      )}
-    >
-      <Icon />
-    </Link>
+    <Tooltip label={label} placement="right">
+      <Link
+        href={href}
+        {...props}
+        className={clsx(
+          "size-10 rounded-full grid place-items-center transition-colors outline-none data-[focus-visible]:ring-2 ring-brand-300",
+          href === currentPath
+            ? "bg-gray-100 text-brand-500"
+            : "hover:bg-brand-400"
+        )}
+      >
+        <Icon />
+      </Link>
+    </Tooltip>
   );
 };
