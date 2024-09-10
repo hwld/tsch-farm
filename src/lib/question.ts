@@ -38,6 +38,7 @@ export const defaultQuestionSetSummaries = (
   };
 
   return [
+    { id: "0", title: "all", questionIds: questions.map((q) => q.id) },
     {
       id: "1",
       title: "Warm",
@@ -64,4 +65,26 @@ export const defaultQuestionSetSummaries = (
       questionIds: questionIdsByDifficulty(questions, "extreme"),
     },
   ];
+};
+
+/**
+ * 難易度が易しい順に並び替えられた[Difficulty, Count][]を返す
+ */
+export const getSortedDifficultyCountEntries = (questionSet: QuestionSet) => {
+  const difficultyCountMap = questionSet.questions.reduce((acc, current) => {
+    acc.set(current.difficulty, (acc.get(current.difficulty) || 0) + 1);
+    return acc;
+  }, new Map<Question["difficulty"], number>());
+
+  const difficultyOrder: Question["difficulty"][] = [
+    "warm",
+    "easy",
+    "medium",
+    "hard",
+    "extreme",
+  ];
+
+  return Array.from(difficultyCountMap.entries()).sort(([d1], [d2]) => {
+    return difficultyOrder.indexOf(d1) - difficultyOrder.indexOf(d2);
+  });
 };

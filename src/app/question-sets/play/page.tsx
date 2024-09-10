@@ -126,9 +126,9 @@ const PlayQuestionSetPage: React.FC = () => {
         )}
       </div>
       <div className="grid grid-rows-[auto_1fr_auto] min-h-0 border border-border rounded-lg overflow-hidden">
-        <div className="px-4 border-b border-border text-base flex items-center h-12 gap-2 bg-gray-800">
-          <IconBoxMultiple className="size-5" />
-          {questionSet.title}
+        <div className="px-4 border-b border-border flex items-center h-12 gap-2 bg-gray-800 min-w-0">
+          <IconBoxMultiple className="size-5 shrink-0" />
+          <p className="truncate">{questionSet.title}</p>
         </div>
         <div className="flex flex-col overflow-auto">
           {questionSet.questions.map((q, index) => {
