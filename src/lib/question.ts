@@ -38,7 +38,7 @@ export const defaultQuestionSetSummaries = (
   };
 
   return [
-    { id: "0", title: "all", questionIds: questions.map((q) => q.id) },
+    { id: "0", title: "All", questionIds: questions.map((q) => q.id) },
     {
       id: "1",
       title: "Warm",

@@ -2,12 +2,11 @@
 
 import { Button, ButtonLink } from "@/components/button";
 import { useQuestions } from "@/components/providers";
-import { QuestionSetCard } from "@/components/question-set-card";
+import { PlayQuestionSetCard } from "@/components/question-set-card";
 import { QuestionToggle } from "@/components/question-toggle";
 import { useQuestionSets } from "@/components/use-question-set";
 import { Routes } from "@/lib/routes";
 import {
-  IconPick,
   IconPlayerPlayFilled,
   IconSelect,
   IconStack2,
@@ -59,7 +58,7 @@ export default function HomePage() {
                 return null;
               }
 
-              return <QuestionSetCard key={set.title} questionSet={set} />;
+              return <PlayQuestionSetCard key={set.title} questionSet={set} />;
             })}
           </div>
         </div>
