@@ -15,12 +15,18 @@ export const questionSchema = z.object({
 
 export type Question = z.infer<typeof questionSchema>;
 
-export type QuestionSet = { id: string; title: string; questions: Question[] };
+export type QuestionSet = {
+  id: string;
+  title: string;
+  questions: Question[];
+  isBuildIn: boolean;
+};
 
 export const questionSetSummarySchema = z.object({
   id: z.string(),
   title: z.string(),
   questionIds: z.array(z.number()),
+  isBuildIn: z.boolean(),
 });
 
 export type QuestionSetSummary = z.infer<typeof questionSetSummarySchema>;
@@ -38,31 +44,41 @@ export const defaultQuestionSetSummaries = (
   };
 
   return [
-    { id: "0", title: "All", questionIds: questions.map((q) => q.id) },
+    {
+      id: "0",
+      title: "All",
+      questionIds: questions.map((q) => q.id),
+      isBuildIn: true,
+    },
     {
       id: "1",
       title: "Warm",
       questionIds: questionIdsByDifficulty(questions, "warm"),
+      isBuildIn: true,
     },
     {
       id: "2",
       title: "Easy",
       questionIds: questionIdsByDifficulty(questions, "easy"),
+      isBuildIn: true,
     },
     {
       id: "3",
       title: "Medium",
       questionIds: questionIdsByDifficulty(questions, "medium"),
+      isBuildIn: true,
     },
     {
       id: "4",
       title: "Hard",
       questionIds: questionIdsByDifficulty(questions, "hard"),
+      isBuildIn: true,
     },
     {
       id: "5",
       title: "Extreme",
       questionIds: questionIdsByDifficulty(questions, "extreme"),
+      isBuildIn: true,
     },
   ];
 };
@@ -87,4 +103,21 @@ export const getSortedDifficultyCountEntries = (questionSet: QuestionSet) => {
   return Array.from(difficultyCountMap.entries()).sort(([d1], [d2]) => {
     return difficultyOrder.indexOf(d1) - difficultyOrder.indexOf(d2);
   });
+};
+
+// TODO: Result
+export const validateQuestionSetSummary = (
+  summary: QuestionSetSummary,
+  allQuestions: Question[]
+): boolean => {
+  if (summary.questionIds.length === 0) {
+    return false;
+  }
+
+  const allQuestionIds = allQuestions.map((q) => q.id);
+  if (!summary.questionIds.every((id) => allQuestionIds.includes(id))) {
+    return false;
+  }
+
+  return true;
 };

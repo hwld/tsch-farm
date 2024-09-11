@@ -15,6 +15,8 @@ import { Routes } from "@/lib/routes";
 import { Link } from "react-aria-components";
 import { IconButton } from "./icon-button";
 import { Menu, MenuItem, MenuSeparator } from "./menu";
+import { useQuestionSets } from "./use-question-set";
+import { useRouter } from "next/navigation";
 
 const Title: React.FC<{ title: string }> = ({ title }) => {
   return (
@@ -46,7 +48,23 @@ const DifficultyCountBadges: React.FC<{
 type Props = { questionSet: QuestionSet };
 
 export const QuestionSetCard: React.FC<Props> = ({ questionSet }) => {
+  const isEditable = !questionSet.isBuildIn;
+
   const difficultyCountEntries = getSortedDifficultyCountEntries(questionSet);
+  const { removeQuestionSetSummary } = useQuestionSets();
+
+  const router = useRouter();
+
+  const handlePlay = () => {
+    router.push(Routes.playQuestionSet(questionSet));
+  };
+
+  const handleRemove = () => {
+    if (!isEditable) {
+      return;
+    }
+    removeQuestionSetSummary(questionSet.id);
+  };
 
   return (
     <div className="grid grid-cols-[1fr,auto] border rounded-lg border-border">
@@ -58,10 +76,23 @@ export const QuestionSetCard: React.FC<Props> = ({ questionSet }) => {
       </div>
       <div className="p-2">
         <Menu trigger={<IconButton icon={IconDots} />}>
-          <MenuItem icon={IconPencil} label="更新する" />
-          <MenuItem icon={IconPlayerPlay} label="挑戦する" />
-          <MenuSeparator />
-          <MenuItem destructive icon={IconTrash} label="削除する" />
+          {isEditable && <MenuItem icon={IconPencil} label="更新する" />}
+          <MenuItem
+            icon={IconPlayerPlay}
+            label="挑戦する"
+            onAction={handlePlay}
+          />
+          {isEditable && (
+            <>
+              <MenuSeparator />
+              <MenuItem
+                destructive
+                icon={IconTrash}
+                label="削除する"
+                onAction={handleRemove}
+              />
+            </>
+          )}
         </Menu>
       </div>
     </div>
@@ -73,11 +104,7 @@ export const PlayQuestionSetCard: React.FC<Props> = ({ questionSet }) => {
 
   return (
     <Link
-      href={Routes.playQuestionSet({
-        id: questionSet.id,
-        title: questionSet.title,
-        questionIds: questionSet.questions.map((q) => q.id),
-      })}
+      href={Routes.playQuestionSet(questionSet)}
       className="text-start w-full border rounded-lg p-4 grid grid-rows-[1fr_auto] gap-4 shadow-lg transition-colors border-border hover:bg-gray-800 outline-none data-[focus-visible]:ring-2 ring-brand-300"
     >
       <Title title={questionSet.title} />

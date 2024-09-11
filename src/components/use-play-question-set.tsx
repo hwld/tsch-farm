@@ -28,6 +28,7 @@ export const usePlayQuestionSet = () => {
       id: query.id,
       title: query.title,
       questions: shuffle(questions),
+      isBuildIn: query.isBuildIn,
     };
 
     return set;

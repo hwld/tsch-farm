@@ -27,6 +27,7 @@ export default function HomePage() {
         id: crypto.randomUUID(),
         title: "選んだ問題",
         questionIds: Array.from(selected),
+        isBuildIn: false,
       })
     );
   };

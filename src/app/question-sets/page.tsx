@@ -4,10 +4,10 @@ import { QuestionSetCard } from "@/components/question-set-card";
 import { useQuestionSets } from "@/components/use-question-set";
 import { Routes } from "@/lib/routes";
 import { IconPlus, IconStack2 } from "@tabler/icons-react";
-import { Link } from "react-aria-components";
+import Link from "next/link";
 
 const QuestionSetsPage: React.FC = () => {
-  const { questionSets } = useQuestionSets();
+  const { questionSets, addQuestionSetSummary } = useQuestionSets();
 
   return (
     <div className="grid place-items-center p-10 grid-cols-[1fr_auto]">
