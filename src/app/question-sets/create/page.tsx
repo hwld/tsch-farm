@@ -2,14 +2,21 @@
 
 import { Button } from "@/components/button";
 import { useQuestions } from "@/components/providers";
-import type { Question } from "@/lib/question";
+import {
+  questionSetFormSchema,
+  type Question,
+  type QuestionSetForm,
+} from "@/lib/question";
 import { useState } from "react";
 import { Input } from "react-aria-components";
 import { QuestionWithCodeToggle } from "@/components/question-with-code-toggle";
-import { IconPlus } from "@tabler/icons-react";
+import { IconAlertCircle, IconPlus } from "@tabler/icons-react";
 import { TschEditor } from "@/components/tsch-editor";
 import { useQuestionSets } from "@/components/use-question-set";
 import { useRouter } from "next/navigation";
+import { useFieldArray, useForm, type SubmitHandler } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import clsx from "clsx";
 
 const CreateQuestionSetPage: React.FC = () => {
   const allQuestions = useQuestions();
@@ -20,27 +27,40 @@ const CreateQuestionSetPage: React.FC = () => {
     setShownQuestion(question);
   };
 
-  const [title, setTitle] = useState("");
+  const {
+    control,
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<QuestionSetForm>({
+    defaultValues: { title: "", questionIds: [] },
+    resolver: zodResolver(questionSetFormSchema),
+  });
 
-  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
+  const {
+    fields: selectedQuestionIds,
+    append: appendQuestionId,
+    remove: removeQuestionId,
+  } = useFieldArray({
+    control,
+    name: "questionIds",
+  });
 
   const handleChangeSelected = (question: Question, selected: boolean) => {
     if (selected) {
-      setSelectedIds((ids) => new Set(ids).add(question.id));
+      appendQuestionId({ value: question.id });
     } else {
-      setSelectedIds((ids) => {
-        const next = new Set(ids);
-        next.delete(question.id);
-        return next;
-      });
+      removeQuestionId(
+        selectedQuestionIds.findIndex((f) => f.value === question.id)
+      );
     }
   };
 
   const { addQuestionSet } = useQuestionSets();
   const router = useRouter();
 
-  const handleAddQuestionSet = () => {
-    addQuestionSet({ title, questionIds: Array.from(selectedIds) });
+  const handleAddQuestionSet: SubmitHandler<QuestionSetForm> = (data) => {
+    addQuestionSet(data);
     router.back();
   };
 
@@ -55,25 +75,60 @@ const CreateQuestionSetPage: React.FC = () => {
         問題セットの作成
       </h1>
       <div className="grid grid-cols-[1fr_1fr] gap-4 min-h-0">
-        <div className="grid grid-rows-[auto_1fr_auto] gap-4 min-h-0">
+        <form
+          className="grid grid-rows-[auto_1fr_auto] gap-4 min-h-0"
+          onSubmit={handleSubmit(handleAddQuestionSet)}
+        >
           <div className="grid grid-rows-[auto_1fr] gap-2">
-            <div className="text-xs text-gray-300">タイトル</div>
+            <div className="grid grid-cols-[1fr_auto] items-center gap-4 h-6">
+              <div className="text-xs text-gray-300">タイトル</div>
+              <div className="text-xs text-red-400 grid grid-cols-[auto_1fr] items-center gap-1">
+                {errors.title && (
+                  <>
+                    <IconAlertCircle className="size-5" />
+                    {errors.title?.message}
+                  </>
+                )}
+              </div>
+            </div>
             <Input
-              className="bg-transparent border border-border rounded h-8 px-2"
-              value={title}
-              onChange={(e) => setTitle(e.currentTarget.value)}
+              className={clsx(
+                "bg-transparent border rounded h-8 px-2 outline-none",
+                errors.title
+                  ? "border-red-400 ring-red-400 data-[focused]:ring-1"
+                  : "border-border ring-brand-300 data-[focused]:ring-2"
+              )}
+              autoComplete="off"
+              {...register("title")}
             />
           </div>
           <div className="grid grid-rows-[auto_1fr] gap-2 min-h-0">
-            <div>問題</div>
-            <div className="border border-border rounded-lg  min-h-0 overflow-hidden grid">
+            <div className="h-6 grid grid-cols-[1fr_auto] items-center">
+              <div className="text-xs text-gray-300">問題</div>
+              <div className="text-xs text-red-400 grid grid-cols-[auto_1fr] items-center gap-1">
+                {errors.questionIds && (
+                  <>
+                    <IconAlertCircle className="size-5" />
+                    {errors.questionIds?.message}
+                  </>
+                )}
+              </div>
+            </div>
+            <div
+              className={clsx(
+                "border rounded-lg  min-h-0 overflow-hidden grid",
+                errors.questionIds ? "border-red-400" : "border-border"
+              )}
+            >
               <div className="flex flex-wrap gap-2 overflow-auto p-4">
                 {allQuestions.map((q) => {
                   return (
                     <QuestionWithCodeToggle
                       key={q.id}
                       question={q}
-                      isSelected={selectedIds.has(q.id)}
+                      isSelected={
+                        !!selectedQuestionIds.find((id) => id.value === q.id)
+                      }
                       onChange={(selected) => handleChangeSelected(q, selected)}
                       onShowCode={() => handleShowCode(q)}
                     />
@@ -86,9 +141,9 @@ const CreateQuestionSetPage: React.FC = () => {
             <Button onPress={handleCancel} color="secondary">
               キャンセル
             </Button>
-            <Button onPress={handleAddQuestionSet}>作成する</Button>
+            <Button type="submit">作成する</Button>
           </div>
-        </div>
+        </form>
         <div>
           <TschEditor
             title={shownQuestion.title}

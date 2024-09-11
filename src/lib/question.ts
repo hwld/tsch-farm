@@ -31,6 +31,17 @@ export const questionSetSummarySchema = z.object({
 
 export type QuestionSetSummary = z.infer<typeof questionSetSummarySchema>;
 
+export const questionSetFormSchema = z.object({
+  title: z.string().min(1, "タイトルを入力してください"),
+  // react-hook-formの都合でnumber[]ではなく、{ value:number }[]を使う
+  // https://github.com/orgs/react-hook-form/discussions/11592#discussioncomment-8692187
+  questionIds: z
+    .array(z.object({ value: z.number() }))
+    .min(1, "問題を選択してください"),
+});
+
+export type QuestionSetForm = z.infer<typeof questionSetFormSchema>;
+
 export const defaultQuestionSetSummaries = (
   questions: Question[]
 ): QuestionSetSummary[] => {

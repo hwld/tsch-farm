@@ -2,6 +2,7 @@ import {
   defaultQuestionSetSummaries,
   validateQuestionSetSummary,
   type QuestionSet,
+  type QuestionSetForm,
   type QuestionSetSummary,
 } from "@/lib/question";
 import { useLocalStorage } from "@mantine/hooks";
@@ -16,9 +17,7 @@ import {
 
 type QuestionSetsContext = {
   questionSets: QuestionSet[];
-  addQuestionSet: (
-    data: Pick<QuestionSetSummary, "title" | "questionIds">
-  ) => void;
+  addQuestionSet: (data: QuestionSetForm) => void;
   updateQuestionSet: (summary: QuestionSetSummary) => void;
   removeQuestionSet: (id: string) => void;
 };
@@ -66,7 +65,7 @@ export const QuestionSetsProvider: React.FC<PropsWithChildren> = ({
         id: crypto.randomUUID(),
         isBuildIn: false,
         title: data.title,
-        questionIds: data.questionIds,
+        questionIds: data.questionIds.map((id) => id.value),
       };
 
       if (!validateQuestionSetSummary(summary, allQuestions)) {
