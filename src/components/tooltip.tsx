@@ -8,11 +8,19 @@ import {
 type Props = {
   label: ReactNode;
   placement?: TooltipProps["placement"];
+  delay?: number;
+  closeDelay?: number;
 } & PropsWithChildren;
 
-export const Tooltip: React.FC<Props> = ({ children, placement, label }) => {
+export const Tooltip: React.FC<Props> = ({
+  children,
+  placement,
+  label,
+  delay = 1000,
+  closeDelay,
+}) => {
   return (
-    <TooltipTrigger delay={1000}>
+    <TooltipTrigger delay={delay} closeDelay={closeDelay}>
       {children}
       <RaTooltip
         offset={4}

@@ -1,6 +1,6 @@
 "use client";
 
-import { IconHome, IconStack2, type Icon } from "@tabler/icons-react";
+import { IconHome, IconPlus, IconStack2, type Icon } from "@tabler/icons-react";
 import { AppIcon } from "./app-icon";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
@@ -29,6 +29,12 @@ export const Sidebar: React.FC<Props> = () => {
           label="問題セット一覧"
           currentPath={pathname}
           icon={IconStack2}
+        />
+        <SidebarLinkItem
+          href={Routes.createQuestionSet()}
+          label="問題セットを作る"
+          currentPath={pathname}
+          icon={IconPlus}
         />
       </div>
     </div>

@@ -114,6 +114,10 @@ export const validateQuestionSetSummary = (
     return false;
   }
 
+  if (summary.title.length === 0) {
+    return false;
+  }
+
   const allQuestionIds = allQuestions.map((q) => q.id);
   if (!summary.questionIds.every((id) => allQuestionIds.includes(id))) {
     return false;

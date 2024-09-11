@@ -7,7 +7,7 @@ import { IconPlus, IconStack2 } from "@tabler/icons-react";
 import Link from "next/link";
 
 const QuestionSetsPage: React.FC = () => {
-  const { questionSets, addQuestionSetSummary } = useQuestionSets();
+  const { questionSets } = useQuestionSets();
 
   return (
     <div className="grid place-items-center p-10 grid-cols-[1fr_auto]">

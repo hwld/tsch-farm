@@ -18,7 +18,9 @@ export type TschEditorCommand = {
 
 type Props = {
   question: Question;
-  footer: ReactNode;
+  readOnly?: boolean;
+  title?: string;
+  footer?: ReactNode;
 
   /**
    *  TschEditorCommand[]を直接受け取ることもできるのだが、KeyCodeやKeyModをmonaco-editorからimportすると、
@@ -31,6 +33,8 @@ type Props = {
 export const TschEditor: React.FC<Props> = ({
   question,
   footer,
+  readOnly,
+  title = "Code",
   buildCommands,
 }) => {
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
@@ -111,10 +115,10 @@ export const TschEditor: React.FC<Props> = ({
     <div className="size-full bg-[#1e1e1e] border-border border rounded-lg overflow-hidden grid grid-rows-[auto_1fr_auto] min-w-0">
       <div className="p-2 text-xs flex gap-1 items-center bg-gray-800 border-border border-b">
         <IconCode className="size-4" />
-        Code
+        {title}
       </div>
       <Editor
-        options={{ automaticLayout: true }}
+        options={{ automaticLayout: true, readOnly }}
         path={`file:///${question.title}.ts`}
         language="typescript"
         theme="vs-dark"

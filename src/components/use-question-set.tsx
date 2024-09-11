@@ -16,9 +16,11 @@ import {
 
 type QuestionSetsContext = {
   questionSets: QuestionSet[];
-  addQuestionSetSummary: (summary: QuestionSetSummary) => void;
-  updateQuestionSetSummary: (summary: QuestionSetSummary) => void;
-  removeQuestionSetSummary: (id: string) => void;
+  addQuestionSet: (
+    data: Pick<QuestionSetSummary, "title" | "questionIds">
+  ) => void;
+  updateQuestionSet: (summary: QuestionSetSummary) => void;
+  removeQuestionSet: (id: string) => void;
 };
 
 const QuestionSetsContext = createContext<QuestionSetsContext | undefined>(
@@ -57,11 +59,15 @@ export const QuestionSetsProvider: React.FC<PropsWithChildren> = ({
     });
   }, [questionSetSummaries, allQuestions]);
 
-  const addQuestionSetSummary = useCallback(
-    (summary: QuestionSetSummary) => {
-      if (questionSets.find((set) => set.id === summary.id)) {
-        throw new Error("すでに存在する問題セット");
-      }
+  // TODO: add,update,removeのエラーハンドリング
+  const addQuestionSet: QuestionSetsContext["addQuestionSet"] = useCallback(
+    (data) => {
+      const summary: QuestionSetSummary = {
+        id: crypto.randomUUID(),
+        isBuildIn: false,
+        title: data.title,
+        questionIds: data.questionIds,
+      };
 
       if (!validateQuestionSetSummary(summary, allQuestions)) {
         throw new Error("不正な問題セット");
@@ -72,45 +78,47 @@ export const QuestionSetsProvider: React.FC<PropsWithChildren> = ({
       const newSummaries = [...questionSetSummaries, summary];
       setQuestionSetSummaries(newSummaries);
     },
-    [allQuestions, questionSetSummaries, questionSets, setQuestionSetSummaries]
+    [allQuestions, questionSetSummaries, setQuestionSetSummaries]
   );
 
-  const updateQuestionSetSummary = useCallback(
-    (summary: QuestionSetSummary) => {
-      if (!questionSets.find((set) => set.id === summary.id)) {
-        throw new Error("存在しない問題セット");
-      }
+  const updateQuestionSet: QuestionSetsContext["updateQuestionSet"] =
+    useCallback(
+      (summary) => {
+        if (!questionSets.find((set) => set.id === summary.id)) {
+          throw new Error("存在しない問題セット");
+        }
 
-      if (!validateQuestionSetSummary(summary, allQuestions)) {
-        throw new Error("不正な問題セット");
-      }
+        if (!validateQuestionSetSummary(summary, allQuestions)) {
+          throw new Error("不正な問題セット");
+        }
 
-      setQuestionSetSummaries((summaries) =>
-        summaries.map((s) => {
-          if (s.id === summary.id) {
-            return summary;
-          }
-          return s;
-        })
-      );
-    },
-    [allQuestions, questionSets, setQuestionSetSummaries]
-  );
+        setQuestionSetSummaries((summaries) =>
+          summaries.map((s) => {
+            if (s.id === summary.id) {
+              return summary;
+            }
+            return s;
+          })
+        );
+      },
+      [allQuestions, questionSets, setQuestionSetSummaries]
+    );
 
-  const removeQuestionSetSummary = useCallback(
-    (id: string) => {
-      setQuestionSetSummaries((sets) => sets.filter((s) => s.id !== id));
-    },
-    [setQuestionSetSummaries]
-  );
+  const removeQuestionSet: QuestionSetsContext["removeQuestionSet"] =
+    useCallback(
+      (id) => {
+        setQuestionSetSummaries((sets) => sets.filter((s) => s.id !== id));
+      },
+      [setQuestionSetSummaries]
+    );
 
   return (
     <QuestionSetsContext.Provider
       value={{
         questionSets,
-        addQuestionSetSummary,
-        updateQuestionSetSummary,
-        removeQuestionSetSummary,
+        addQuestionSet,
+        updateQuestionSet,
+        removeQuestionSet,
       }}
     >
       {children}

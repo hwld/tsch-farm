@@ -51,7 +51,7 @@ export const QuestionSetCard: React.FC<Props> = ({ questionSet }) => {
   const isEditable = !questionSet.isBuildIn;
 
   const difficultyCountEntries = getSortedDifficultyCountEntries(questionSet);
-  const { removeQuestionSetSummary } = useQuestionSets();
+  const { removeQuestionSet } = useQuestionSets();
 
   const router = useRouter();
 
@@ -63,7 +63,7 @@ export const QuestionSetCard: React.FC<Props> = ({ questionSet }) => {
     if (!isEditable) {
       return;
     }
-    removeQuestionSetSummary(questionSet.id);
+    removeQuestionSet(questionSet.id);
   };
 
   return (

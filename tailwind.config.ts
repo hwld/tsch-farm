@@ -26,6 +26,7 @@ const config: Config = {
   ],
   theme: {
     colors: {
+      transparent: twColors.transparent,
       gray: twColors.zinc,
       brand: colors.primary,
       lime: twColors.lime,
