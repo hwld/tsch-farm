@@ -4,7 +4,7 @@ import { IconHome, IconPlus, IconStack2, type Icon } from "@tabler/icons-react";
 import { AppIcon } from "./app-icon";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
-import { pathName, Routes } from "@/lib/routes";
+import { pathName, Routes, type Route } from "@/lib/routes";
 import { Tooltip } from "./tooltip";
 import { Link, type LinkProps } from "react-aria-components";
 
@@ -45,6 +45,7 @@ type SidebarLinkItemProps = LinkProps & {
   icon: Icon;
   currentPath: string;
   label: string;
+  href: Route;
 };
 
 const SidebarLinkItem: React.FC<SidebarLinkItemProps> = ({

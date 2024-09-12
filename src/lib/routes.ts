@@ -47,10 +47,14 @@ export const Routes = {
   },
 } as const;
 
+export type Route = ReturnType<(typeof Routes)[keyof typeof Routes]>;
+
 /**
  *  SearchParamsを消す
  */
-export const pathName = (route: string): string => {
-  const url = new URL(`${window.location.origin}${route}`);
+export const pathName = (route: Route): string => {
+  const dummyDomain = "http://example.com";
+  const url = new URL(`${dummyDomain}${route}`);
+
   return url.pathname;
 };
