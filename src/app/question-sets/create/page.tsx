@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Routes } from "@/lib/routes";
 import { QuestionSetForm } from "@/components/question-set-form";
 import { Button } from "@/components/button";
-import { useQuestionSets } from "@/components/use-question-set";
+import { useQuestionSets } from "@/components/use-question-sets";
 import { toast } from "sonner";
 import type { SubmitHandler } from "react-hook-form";
 import type { QuestionSetFormData } from "@/lib/question";

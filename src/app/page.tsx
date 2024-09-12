@@ -4,7 +4,7 @@ import { Button, ButtonLink } from "@/components/button";
 import { useQuestions } from "@/components/providers";
 import { PlayQuestionSetCard } from "@/components/question-set-card";
 import { QuestionToggle } from "@/components/question-toggle";
-import { useQuestionSets } from "@/components/use-question-set";
+import { useQuestionSets } from "@/components/use-question-sets";
 import { Routes } from "@/lib/routes";
 import {
   IconPlayerPlayFilled,
@@ -16,7 +16,9 @@ import { useState } from "react";
 
 export default function HomePage() {
   const questions = useQuestions();
-  const { questionSets } = useQuestionSets();
+  const {
+    query: { status, questionSets },
+  } = useQuestionSets();
 
   const [selected, setSelected] = useState<Set<number>>(new Set());
 
@@ -54,13 +56,14 @@ export default function HomePage() {
             </ButtonLink>
           </div>
           <div className="border-border rounded-lg grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] auto-rows-min gap-2 p-4 overflow-auto">
-            {questionSets.map((set) => {
-              if (!set.questions.length) {
-                return null;
-              }
+            {status === "success" &&
+              questionSets.map((set) => {
+                if (!set.questions.length) {
+                  return null;
+                }
 
-              return <PlayQuestionSetCard key={set.id} questionSet={set} />;
-            })}
+                return <PlayQuestionSetCard key={set.id} questionSet={set} />;
+              })}
           </div>
         </div>
         <div className="border rounded-lg border-border grid grid-rows-[auto_1fr_auto] min-h-0 overflow-hidden">

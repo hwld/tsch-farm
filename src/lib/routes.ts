@@ -16,10 +16,10 @@ export const Routes = {
     `/question-sets/create?${isNavigatedfromAppQueryName}=true` as const,
 
   playQuestionSet: (data: QuestionSet | QuestionSetSummary) => {
-    const query = new URLSearchParams();
+    const searchParams = new URLSearchParams();
 
     if ("questions" in data) {
-      query.set(
+      searchParams.set(
         playQuestionSetQueryName,
         JSON.stringify({
           id: data.id,
@@ -29,7 +29,7 @@ export const Routes = {
         } satisfies QuestionSetSummary)
       );
     } else {
-      query.set(
+      searchParams.set(
         playQuestionSetQueryName,
         JSON.stringify({
           id: data.id,
@@ -40,14 +40,14 @@ export const Routes = {
       );
     }
 
-    return `/question-sets/play?${query.toString()}` as const;
+    return `/question-sets/play?${searchParams.toString()}` as const;
   },
 
   playQuestion: (questionId: string) => {
-    const query = new URLSearchParams();
-    query.set("id", questionId);
+    const searchParams = new URLSearchParams();
+    searchParams.set("id", questionId);
 
-    return `/question/play?${query.toString()}` as const;
+    return `/question/play?${searchParams.toString()}` as const;
   },
 } as const;
 

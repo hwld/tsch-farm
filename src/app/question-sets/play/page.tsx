@@ -3,7 +3,6 @@
 import { Button, ButtonGroup } from "@/components/button";
 import { Tooltip } from "@/components/tooltip";
 import { TschEditor } from "@/components/tsch-editor";
-import { usePlayQuestionSet } from "@/components/use-play-question-set";
 import type { Monaco } from "@monaco-editor/react";
 import {
   IconBoxMultiple,
@@ -15,6 +14,7 @@ import {
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
+import { usePlayQuestionSet } from "./use-play-question-set";
 
 const getQuestionId = (id: number) => `question-${id}`;
 

@@ -15,7 +15,7 @@ import { Routes } from "@/lib/routes";
 import { Link } from "react-aria-components";
 import { IconButton } from "./icon-button";
 import { Menu, MenuItem, MenuSeparator } from "./menu";
-import { useQuestionSets } from "./use-question-set";
+import { useQuestionSets } from "./use-question-sets";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 

@@ -10,7 +10,8 @@ import {
   type PropsWithChildren,
 } from "react";
 import { RouterProvider } from "react-aria-components";
-import { QuestionSetsProvider } from "./use-question-set";
+import { QuestionSetsProvider } from "./use-question-sets";
+import { IsServerProvider } from "./use-is-server";
 
 const QuestionsContext = createContext<Question[] | undefined>(undefined);
 
@@ -56,14 +57,16 @@ export const Providers: React.FC<Props> = ({ children, value }) => {
   }, []);
 
   return (
-    <RouterProvider navigate={router.push}>
-      <QuestionsContext.Provider value={value}>
-        <QuestionSetsProvider>
-          <TypeDefsContext.Provider value={typeDef}>
-            {children}
-          </TypeDefsContext.Provider>
-        </QuestionSetsProvider>
-      </QuestionsContext.Provider>
-    </RouterProvider>
+    <IsServerProvider>
+      <RouterProvider navigate={router.push}>
+        <QuestionsContext.Provider value={value}>
+          <QuestionSetsProvider>
+            <TypeDefsContext.Provider value={typeDef}>
+              {children}
+            </TypeDefsContext.Provider>
+          </QuestionSetsProvider>
+        </QuestionsContext.Provider>
+      </RouterProvider>
+    </IsServerProvider>
   );
 };

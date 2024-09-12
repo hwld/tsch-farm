@@ -1,5 +1,5 @@
 import { useSearchParams } from "next/navigation";
-import { useQuestions } from "./providers";
+import { useQuestions } from "../../../components/providers";
 import { playQuestionSetQueryName } from "@/lib/routes";
 import { questionSetSummarySchema, type QuestionSet } from "@/lib/question";
 import { shuffle } from "@/lib/shuffle";

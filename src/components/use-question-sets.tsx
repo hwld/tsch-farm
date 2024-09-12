@@ -14,9 +14,12 @@ import {
   useMemo,
   type PropsWithChildren,
 } from "react";
+import { useIsServer } from "./use-is-server";
 
 type QuestionSetsContext = {
-  questionSets: QuestionSet[];
+  query:
+    | { status: "success"; questionSets: QuestionSet[] }
+    | { status: "loading"; questionSets: undefined };
   addQuestionSet: (data: QuestionSetFormData) => void;
   updateQuestionSet: (summary: QuestionSetSummary) => void;
   removeQuestionSet: (id: string) => void;
@@ -46,6 +49,8 @@ export const QuestionSetsProvider: React.FC<PropsWithChildren> = ({
     key: "question-set",
     defaultValue: defaultQuestionSetSummaries(allQuestions),
   });
+
+  const isServer = useIsServer();
 
   const questionSets = useMemo(() => {
     return questionSetSummaries.map((summary): QuestionSet => {
@@ -112,12 +117,24 @@ export const QuestionSetsProvider: React.FC<PropsWithChildren> = ({
 
   return (
     <QuestionSetsContext.Provider
-      value={{
-        questionSets,
-        addQuestionSet,
-        updateQuestionSet,
-        removeQuestionSet,
-      }}
+      value={useMemo(
+        (): QuestionSetsContext => ({
+          // ビルド中のレンダリングと、ハイドレーション中はローディング状態にしておく
+          query: isServer
+            ? { status: "loading", questionSets: undefined }
+            : { status: "success", questionSets },
+          addQuestionSet,
+          updateQuestionSet,
+          removeQuestionSet,
+        }),
+        [
+          addQuestionSet,
+          isServer,
+          questionSets,
+          removeQuestionSet,
+          updateQuestionSet,
+        ]
+      )}
     >
       {children}
     </QuestionSetsContext.Provider>
