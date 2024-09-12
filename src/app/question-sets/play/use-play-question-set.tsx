@@ -5,6 +5,7 @@ import { questionSetSummarySchema, type QuestionSet } from "@/lib/question";
 import { shuffle } from "@/lib/shuffle";
 import { useMemo } from "react";
 
+// TODO: QuestionSetSummaryをparamsとして受け取るようにする
 export const usePlayQuestionSet = () => {
   const allQuestions = useQuestions();
 

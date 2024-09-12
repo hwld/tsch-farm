@@ -60,6 +60,10 @@ export const QuestionSetCard: React.FC<Props> = ({ questionSet }) => {
     router.push(Routes.playQuestionSet(questionSet));
   };
 
+  const handleUpdate = () => {
+    router.push(Routes.updateQuestionSet(questionSet.id));
+  };
+
   const handleRemove = () => {
     if (!isEditable) {
       return;
@@ -83,7 +87,13 @@ export const QuestionSetCard: React.FC<Props> = ({ questionSet }) => {
       </div>
       <div className="p-2">
         <Menu trigger={<IconButton icon={IconDots} />}>
-          {isEditable && <MenuItem icon={IconPencil} label="更新する" />}
+          {isEditable && (
+            <MenuItem
+              icon={IconPencil}
+              label="更新する"
+              onAction={handleUpdate}
+            />
+          )}
           <MenuItem
             icon={IconPlayerPlay}
             label="挑戦する"

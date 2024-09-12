@@ -15,6 +15,14 @@ export const Routes = {
   createQuestionSet: () =>
     `/question-sets/create?${isNavigatedfromAppQueryName}=true` as const,
 
+  updateQuestionSet: (id: string) => {
+    const searchParams = new URLSearchParams();
+    searchParams.append("id", id);
+    searchParams.append(isNavigatedfromAppQueryName, "true");
+
+    return `/question-sets/update?${searchParams.toString()}` as const;
+  },
+
   playQuestionSet: (data: QuestionSet | QuestionSetSummary) => {
     const searchParams = new URLSearchParams();
 

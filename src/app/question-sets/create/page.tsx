@@ -23,7 +23,7 @@ const CreateQuestionSetPage: React.FC = () => {
       handleBack();
     } catch (e) {
       toast.error("問題セットを作成することができませんでした");
-      console.error(e);
+      throw e;
     }
   };
 

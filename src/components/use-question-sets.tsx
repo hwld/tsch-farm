@@ -21,7 +21,7 @@ type QuestionSetsContext = {
     | { status: "success"; questionSets: QuestionSet[] }
     | { status: "loading"; questionSets: undefined };
   addQuestionSet: (data: QuestionSetFormData) => void;
-  updateQuestionSet: (summary: QuestionSetSummary) => void;
+  updateQuestionSet: (data: QuestionSetFormData & { id: string }) => void;
   removeQuestionSet: (id: string) => void;
 };
 
@@ -46,7 +46,7 @@ export const QuestionSetsProvider: React.FC<PropsWithChildren> = ({
   const [questionSetSummaries, setQuestionSetSummaries] = useLocalStorage<
     QuestionSetSummary[]
   >({
-    key: "question-set",
+    key: "question-sets",
     defaultValue: defaultQuestionSetSummaries(allQuestions),
   });
 
@@ -86,19 +86,27 @@ export const QuestionSetsProvider: React.FC<PropsWithChildren> = ({
 
   const updateQuestionSet: QuestionSetsContext["updateQuestionSet"] =
     useCallback(
-      (summary) => {
-        if (!questionSets.find((set) => set.id === summary.id)) {
+      (data) => {
+        const questionSet = questionSets.find((set) => set.id === data.id);
+        if (!questionSet) {
           throw new Error("存在しない問題セット");
         }
 
-        if (!validateQuestionSetSummary(summary, allQuestions)) {
+        const newSummary: QuestionSetSummary = {
+          id: questionSet.id,
+          title: data.title,
+          questionIds: data.questionIds.map((id) => id.value),
+          isBuildIn: questionSet.isBuildIn,
+        };
+
+        if (!validateQuestionSetSummary(newSummary, allQuestions)) {
           throw new Error("不正な問題セット");
         }
 
         setQuestionSetSummaries((summaries) =>
           summaries.map((s) => {
-            if (s.id === summary.id) {
-              return summary;
+            if (s.id === newSummary.id) {
+              return newSummary;
             }
             return s;
           })

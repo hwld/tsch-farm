@@ -25,7 +25,7 @@ export const useIsNavigatedFromApp = () => {
       newSearchParams.delete(isNavigatedfromAppQueryName);
     }
 
-    router.replace(currentPath + newSearchParams.toString());
+    router.replace(`${currentPath}?${newSearchParams}`);
   }, [currentPath, router, searchParams]);
 
   return isNavigatedFromApp;

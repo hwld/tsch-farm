@@ -17,7 +17,7 @@ type Props = {
   actions?: ReactNode;
   onSubmit: (data: QuestionSetFormData) => void;
   isNavigatedFromApp?: boolean;
-  defaultValues?: QuestionSetFormData;
+  defaultValues?: QuestionSetFormData | undefined;
 };
 
 export const QuestionSetForm: React.FC<Props> = ({
