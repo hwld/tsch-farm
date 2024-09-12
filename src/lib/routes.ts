@@ -1,6 +1,10 @@
 import { type QuestionSet, type QuestionSetSummary } from "./question";
 
-export const fromAppQueryName = "from-app";
+/**
+ * アプリ内から遷移されたかを表すクエリの名前
+ */
+export const isNavigatedfromAppQueryName = "from-app";
+
 export const playQuestionSetQueryName = "query";
 
 export const Routes = {
@@ -9,7 +13,7 @@ export const Routes = {
   questionSets: () => "/question-sets" as const,
 
   createQuestionSet: () =>
-    `/question-sets/create?${fromAppQueryName}=true` as const,
+    `/question-sets/create?${isNavigatedfromAppQueryName}=true` as const,
 
   playQuestionSet: (data: QuestionSet | QuestionSetSummary) => {
     const query = new URLSearchParams();

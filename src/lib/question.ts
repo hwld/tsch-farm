@@ -40,7 +40,7 @@ export const questionSetFormSchema = z.object({
     .min(1, "問題を選択してください"),
 });
 
-export type QuestionSetForm = z.infer<typeof questionSetFormSchema>;
+export type QuestionSetFormData = z.infer<typeof questionSetFormSchema>;
 
 export const defaultQuestionSetSummaries = (
   questions: Question[]

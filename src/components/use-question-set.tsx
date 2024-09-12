@@ -2,7 +2,7 @@ import {
   defaultQuestionSetSummaries,
   validateQuestionSetSummary,
   type QuestionSet,
-  type QuestionSetForm,
+  type QuestionSetFormData,
   type QuestionSetSummary,
 } from "@/lib/question";
 import { useLocalStorage } from "@mantine/hooks";
@@ -17,7 +17,7 @@ import {
 
 type QuestionSetsContext = {
   questionSets: QuestionSet[];
-  addQuestionSet: (data: QuestionSetForm) => void;
+  addQuestionSet: (data: QuestionSetFormData) => void;
   updateQuestionSet: (summary: QuestionSetSummary) => void;
   removeQuestionSet: (id: string) => void;
 };
