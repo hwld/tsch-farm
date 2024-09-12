@@ -18,6 +18,7 @@ import { useFieldArray, useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import clsx from "clsx";
 import { fromAppQueryName, Routes } from "@/lib/routes";
+import { toast } from "sonner";
 
 const CreateQuestionSetPage: React.FC = () => {
   const allQuestions = useQuestions();
@@ -61,8 +62,13 @@ const CreateQuestionSetPage: React.FC = () => {
   const router = useRouter();
 
   const handleAddQuestionSet: SubmitHandler<QuestionSetForm> = (data) => {
-    addQuestionSet(data);
-    handleBack();
+    try {
+      addQuestionSet(data);
+      handleBack();
+    } catch (e) {
+      toast.error("問題セットを作成することができませんでした");
+      console.error(e);
+    }
   };
 
   const handleBack = () => {

@@ -116,7 +116,6 @@ export const getSortedDifficultyCountEntries = (questionSet: QuestionSet) => {
   });
 };
 
-// TODO: Result
 export const validateQuestionSetSummary = (
   summary: QuestionSetSummary,
   allQuestions: Question[]

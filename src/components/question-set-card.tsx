@@ -17,6 +17,7 @@ import { IconButton } from "./icon-button";
 import { Menu, MenuItem, MenuSeparator } from "./menu";
 import { useQuestionSets } from "./use-question-set";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const Title: React.FC<{ title: string }> = ({ title }) => {
   return (
@@ -63,7 +64,13 @@ export const QuestionSetCard: React.FC<Props> = ({ questionSet }) => {
     if (!isEditable) {
       return;
     }
-    removeQuestionSet(questionSet.id);
+
+    try {
+      removeQuestionSet(questionSet.id);
+    } catch (e) {
+      toast.error("問題セットを削除できませんでした");
+      console.error(e);
+    }
   };
 
   return (
