@@ -7,16 +7,17 @@ import {
   type Question,
   type QuestionSetForm,
 } from "@/lib/question";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Input } from "react-aria-components";
 import { QuestionWithCodeToggle } from "@/components/question-with-code-toggle";
 import { IconAlertCircle, IconPlus } from "@tabler/icons-react";
 import { TschEditor } from "@/components/tsch-editor";
 import { useQuestionSets } from "@/components/use-question-set";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useFieldArray, useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import clsx from "clsx";
+import { fromAppQueryName, Routes } from "@/lib/routes";
 
 const CreateQuestionSetPage: React.FC = () => {
   const allQuestions = useQuestions();
@@ -61,12 +62,31 @@ const CreateQuestionSetPage: React.FC = () => {
 
   const handleAddQuestionSet: SubmitHandler<QuestionSetForm> = (data) => {
     addQuestionSet(data);
-    router.back();
+    handleBack();
   };
 
-  const handleCancel = () => {
-    router.back();
+  const handleBack = () => {
+    if (fromApp.current && window.history.length > 1) {
+      router.back();
+    } else {
+      router.push(Routes.home());
+    }
   };
+
+  const currentPath = usePathname();
+  const searchParams = useSearchParams();
+
+  const fromApp = useRef(false);
+  useEffect(() => {
+    const newSearchParams = new URLSearchParams(searchParams);
+
+    if (newSearchParams.get(fromAppQueryName)) {
+      fromApp.current = true;
+      newSearchParams.delete(fromAppQueryName);
+    }
+
+    router.replace(currentPath + newSearchParams.toString());
+  }, [currentPath, router, searchParams]);
 
   return (
     <div className="grid grid-rows-[auto_1fr] p-6 gap-6 min-h-0">
@@ -138,7 +158,7 @@ const CreateQuestionSetPage: React.FC = () => {
             </div>
           </div>
           <div className="flex justify-end gap-2">
-            <Button onPress={handleCancel} color="secondary">
+            <Button onPress={handleBack} color="secondary">
               キャンセル
             </Button>
             <Button type="submit">作成する</Button>

@@ -59,7 +59,7 @@ export default function HomePage() {
                 return null;
               }
 
-              return <PlayQuestionSetCard key={set.title} questionSet={set} />;
+              return <PlayQuestionSetCard key={set.id} questionSet={set} />;
             })}
           </div>
         </div>

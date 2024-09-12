@@ -1,5 +1,6 @@
 import { type QuestionSet, type QuestionSetSummary } from "./question";
 
+export const fromAppQueryName = "from-app";
 export const playQuestionSetQueryName = "query";
 
 export const Routes = {
@@ -7,7 +8,8 @@ export const Routes = {
 
   questionSets: () => "/question-sets" as const,
 
-  createQuestionSet: () => "/question-sets/create" as const,
+  createQuestionSet: () =>
+    `/question-sets/create?${fromAppQueryName}=true` as const,
 
   playQuestionSet: (data: QuestionSet | QuestionSetSummary) => {
     const query = new URLSearchParams();
