@@ -6,6 +6,7 @@ import { Sidebar } from "@/components/sidebar";
 import { Providers } from "@/components/providers";
 import { getQuestions } from "@/lib/get-questions";
 import { Suspense } from "react";
+import { Toaster, type ToastT } from "sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,6 +21,14 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const questions = await getQuestions();
+
+  // 補完を効かせるために変数に直接型をつけないでsatisfiesを使う
+  const toastClass = {
+    toast: "bg-gray-800 border border-border text-gray-100 group",
+    icon: "group-data-[type='error']:text-red-500 group-data-[type='success']:text-lime-500",
+    closeButton:
+      "bg-transparent !border-[2px] !border-gray-400 !right-0 !left-[unset] !-translate-y-2 !translate-x-2 [&>svg]:stroke-[4px] [&>svg]:stroke-gray-300 hover:!bg-gray-100/30 transition-colors",
+  } satisfies ToastT["classNames"];
 
   return (
     <html lang="ja">
@@ -40,6 +49,11 @@ export default async function RootLayout({
               </div>
             </div>
           </div>
+          <Toaster
+            toastOptions={{ classNames: toastClass, duration: 5000 }}
+            closeButton
+            expand
+          />
         </Providers>
       </body>
     </html>
