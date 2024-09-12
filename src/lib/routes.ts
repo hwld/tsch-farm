@@ -46,3 +46,11 @@ export const Routes = {
     return `/question/play?${query.toString()}` as const;
   },
 } as const;
+
+/**
+ *  SearchParamsを消す
+ */
+export const pathName = (route: string): string => {
+  const url = new URL(`${window.location.origin}${route}`);
+  return url.pathname;
+};

@@ -4,7 +4,7 @@ import { IconHome, IconPlus, IconStack2, type Icon } from "@tabler/icons-react";
 import { AppIcon } from "./app-icon";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
-import { Routes } from "@/lib/routes";
+import { pathName, Routes } from "@/lib/routes";
 import { Tooltip } from "./tooltip";
 import { Link, type LinkProps } from "react-aria-components";
 
@@ -54,6 +54,8 @@ const SidebarLinkItem: React.FC<SidebarLinkItemProps> = ({
   label,
   ...props
 }) => {
+  const isActive = href && currentPath === pathName(href);
+
   return (
     <Tooltip label={label} placement="right">
       <Link
@@ -61,9 +63,7 @@ const SidebarLinkItem: React.FC<SidebarLinkItemProps> = ({
         {...props}
         className={clsx(
           "size-10 rounded-full grid place-items-center transition-colors outline-none data-[focus-visible]:ring-2 ring-brand-300",
-          href === currentPath
-            ? "bg-gray-100 text-brand-500"
-            : "hover:bg-brand-400"
+          isActive ? "bg-gray-100 text-brand-500" : "hover:bg-brand-400"
         )}
       >
         <Icon />
