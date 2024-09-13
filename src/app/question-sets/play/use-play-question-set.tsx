@@ -4,10 +4,17 @@ import { playQuestionSetQueryName } from "@/lib/routes";
 import { questionSetSummarySchema, type QuestionSet } from "@/lib/question";
 import { shuffle } from "@/lib/shuffle";
 import { useMemo } from "react";
+import { useQuestionSets } from "@/components/use-question-sets";
+import { isUnorderedEqual } from "@/lib/utils";
+
+type QuestionSetForPlay = QuestionSet & { isOwned: boolean };
 
 // TODO: QuestionSetSummaryをparamsとして受け取るようにする
-export const usePlayQuestionSet = () => {
+export const usePlayQuestionSet = (): QuestionSetForPlay => {
   const allQuestions = useQuestions();
+  const {
+    query: { questionSets },
+  } = useQuestionSets();
 
   const queryRaw = useSearchParams().get(playQuestionSetQueryName);
   if (!queryRaw) {
@@ -25,16 +32,25 @@ export const usePlayQuestionSet = () => {
       return q;
     });
 
-    const set: QuestionSet = {
+    const set: QuestionSetForPlay = {
       id: query.id,
       title: query.title,
       questions: shuffle(questions),
       isBuildIn: query.isBuildIn,
       isPinned: query.isPinned,
+      isOwned: !!questionSets?.find((mySet) => {
+        return (
+          mySet.title === query.title &&
+          isUnorderedEqual(
+            mySet.questions.map((q) => q.id),
+            query.questionIds
+          )
+        );
+      }),
     };
 
     return set;
-  }, [allQuestions, queryRaw]);
+  }, [allQuestions, queryRaw, questionSets]);
 
   return questionSet;
 };

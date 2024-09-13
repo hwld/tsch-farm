@@ -9,6 +9,7 @@ import {
   IconDots,
   IconPencil,
   IconPlayerPlay,
+  IconShare,
   IconStar,
   IconTrash,
 } from "@tabler/icons-react";
@@ -61,6 +62,18 @@ export const QuestionSetCard: React.FC<Props> = ({ questionSet }) => {
 
   const handlePlay = () => {
     router.push(Routes.playQuestionSet(questionSet));
+  };
+
+  const handleShare = async () => {
+    try {
+      const url = new URL(
+        window.location.origin + Routes.playQuestionSet(questionSet)
+      );
+      navigator.clipboard.writeText(url.toString());
+      toast.success("挑戦のためのリンクをコピーしました");
+    } catch (e) {
+      toast.error("クリップボードへのコピーに失敗しました");
+    }
   };
 
   const handleUpdate = () => {
@@ -118,6 +131,11 @@ export const QuestionSetCard: React.FC<Props> = ({ questionSet }) => {
           />
           {isEditable && (
             <>
+              <MenuItem
+                icon={IconShare}
+                label="共有する"
+                onAction={handleShare}
+              />
               <MenuSeparator />
               <MenuItem
                 destructive

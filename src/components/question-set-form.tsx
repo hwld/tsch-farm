@@ -81,6 +81,7 @@ export const QuestionSetForm: React.FC<Props> = ({
             </div>
           </div>
           <Input
+            autoFocus
             className={clsx(
               "bg-transparent border rounded h-8 px-2 outline-none",
               errors.title

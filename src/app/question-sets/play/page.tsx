@@ -9,18 +9,22 @@ import {
   IconChevronLeft,
   IconChevronRight,
   IconCode,
+  IconDownload,
   IconX,
 } from "@tabler/icons-react";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import { usePlayQuestionSet } from "./use-play-question-set";
+import { useQuestionSets } from "@/components/use-question-sets";
+import { toast } from "sonner";
 
 const getQuestionId = (id: number) => `question-${id}`;
 
 const PlayQuestionSetPage: React.FC = () => {
   const router = useRouter();
   const questionSet = usePlayQuestionSet();
+  const { addQuestionSet } = useQuestionSets();
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const currentQuestion = questionSet.questions.at(currentQuestionIndex);
@@ -57,6 +61,20 @@ const PlayQuestionSetPage: React.FC = () => {
   const handleEnd = useCallback(() => {
     router.back();
   }, [router]);
+
+  const handleImport = () => {
+    try {
+      addQuestionSet({
+        title: questionSet.title,
+        questionIds: questionSet.questions.map((q) => ({ value: q.id })),
+        isPinned: false,
+      });
+      toast.success("問題セットをインポートしました");
+    } catch (e) {
+      toast.error("問題セットのインポートに失敗しました");
+      throw e;
+    }
+  };
 
   const buildTschEditorCommands = useCallback(
     (monaco: Monaco) => [
@@ -153,6 +171,17 @@ const PlayQuestionSetPage: React.FC = () => {
             );
           })}
         </div>
+        {!questionSet.isOwned && (
+          <div className="border-t border-border grid  items-center justify-end p-2">
+            <Button
+              leftIcon={IconDownload}
+              color="secondary"
+              onPress={handleImport}
+            >
+              インポートする
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );
