@@ -8,9 +8,7 @@ import { pathName, Routes, type Route } from "@/lib/routes";
 import { Tooltip } from "./tooltip";
 import { Link, type LinkProps } from "react-aria-components";
 
-type Props = {};
-
-export const Sidebar: React.FC<Props> = () => {
+export const Sidebar: React.FC = () => {
   const pathname = usePathname();
 
   return (
