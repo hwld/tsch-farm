@@ -56,6 +56,7 @@ const UpdateQuestionSetPage: React.FC = () => {
             questionIds: questionSet.questions.map((q) => ({
               value: q.id,
             })),
+            isPinned: questionSet.isPinned,
           }}
           onSubmit={handleUpdate}
           actions={

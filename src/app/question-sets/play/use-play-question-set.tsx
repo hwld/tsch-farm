@@ -30,6 +30,7 @@ export const usePlayQuestionSet = () => {
       title: query.title,
       questions: shuffle(questions),
       isBuildIn: query.isBuildIn,
+      isPinned: query.isPinned,
     };
 
     return set;

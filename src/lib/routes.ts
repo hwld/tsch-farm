@@ -26,27 +26,19 @@ export const Routes = {
   playQuestionSet: (data: QuestionSet | QuestionSetSummary) => {
     const searchParams = new URLSearchParams();
 
-    if ("questions" in data) {
-      searchParams.set(
-        playQuestionSetQueryName,
-        JSON.stringify({
-          id: data.id,
-          title: data.title,
-          questionIds: data.questions.map((q) => q.id),
-          isBuildIn: data.isBuildIn,
-        } satisfies QuestionSetSummary)
-      );
-    } else {
-      searchParams.set(
-        playQuestionSetQueryName,
-        JSON.stringify({
-          id: data.id,
-          title: data.title,
-          questionIds: data.questionIds,
-          isBuildIn: data.isBuildIn,
-        } satisfies QuestionSetSummary)
-      );
-    }
+    searchParams.set(
+      playQuestionSetQueryName,
+      JSON.stringify({
+        id: data.id,
+        title: data.title,
+        questionIds:
+          "questions" in data
+            ? data.questions.map((q) => q.id)
+            : data.questionIds,
+        isBuildIn: data.isBuildIn,
+        isPinned: data.isPinned,
+      } satisfies QuestionSetSummary)
+    );
 
     return `/question-sets/play?${searchParams.toString()}` as const;
   },

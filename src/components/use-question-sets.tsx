@@ -70,6 +70,7 @@ export const QuestionSetsProvider: React.FC<PropsWithChildren> = ({
         isBuildIn: false,
         title: data.title,
         questionIds: data.questionIds.map((id) => id.value),
+        isPinned: data.isPinned,
       };
 
       if (!validateQuestionSetSummary(summary, allQuestions)) {
@@ -97,6 +98,7 @@ export const QuestionSetsProvider: React.FC<PropsWithChildren> = ({
           title: data.title,
           questionIds: data.questionIds.map((id) => id.value),
           isBuildIn: questionSet.isBuildIn,
+          isPinned: data.isPinned,
         };
 
         if (!validateQuestionSetSummary(newSummary, allQuestions)) {

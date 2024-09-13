@@ -9,15 +9,18 @@ import {
   IconDots,
   IconPencil,
   IconPlayerPlay,
+  IconStar,
   IconTrash,
 } from "@tabler/icons-react";
 import { Routes } from "@/lib/routes";
-import { Link } from "react-aria-components";
+import { Button, Link } from "react-aria-components";
 import { IconButton } from "./icon-button";
 import { Menu, MenuItem, MenuSeparator } from "./menu";
 import { useQuestionSets } from "./use-question-sets";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { Tooltip } from "./tooltip";
+import clsx from "clsx";
 
 const Title: React.FC<{ title: string }> = ({ title }) => {
   return (
@@ -52,7 +55,7 @@ export const QuestionSetCard: React.FC<Props> = ({ questionSet }) => {
   const isEditable = !questionSet.isBuildIn;
 
   const difficultyCountEntries = getSortedDifficultyCountEntries(questionSet);
-  const { removeQuestionSet } = useQuestionSets();
+  const { removeQuestionSet, updateQuestionSet } = useQuestionSets();
 
   const router = useRouter();
 
@@ -73,19 +76,33 @@ export const QuestionSetCard: React.FC<Props> = ({ questionSet }) => {
       removeQuestionSet(questionSet.id);
     } catch (e) {
       toast.error("問題セットを削除できませんでした");
-      console.error(e);
+      throw e;
+    }
+  };
+
+  const handleTogglePinned = () => {
+    try {
+      updateQuestionSet({
+        id: questionSet.id,
+        title: questionSet.title,
+        questionIds: questionSet.questions.map((q) => ({ value: q.id })),
+        isPinned: !questionSet.isPinned,
+      });
+    } catch (e) {
+      toast("問題セットをピン留めすることができませんでした");
+      throw e;
     }
   };
 
   return (
     <div className="grid grid-cols-[1fr,auto] border rounded-lg border-border">
-      <div className="flex flex-col gap-4 p-4">
+      <div className="grid grid-rows-[auto_1fr] gap-4 p-4 items-end">
         <Title title={questionSet.title} />
         <DifficultyCountBadges
           difficultyCountEntries={difficultyCountEntries}
         />
       </div>
-      <div className="p-2">
+      <div className="p-2 grid grid-rows-[auto_1fr] gap-4 place-items-end">
         <Menu trigger={<IconButton icon={IconDots} />}>
           {isEditable && (
             <MenuItem
@@ -111,6 +128,32 @@ export const QuestionSetCard: React.FC<Props> = ({ questionSet }) => {
             </>
           )}
         </Menu>
+        <Tooltip
+          label={
+            questionSet.isPinned
+              ? "ホーム画面に表示させない"
+              : "ホーム画面に表示させる"
+          }
+        >
+          <Button
+            onPress={handleTogglePinned}
+            className={clsx(
+              "border border-border rounded-full transition-all grid place-items-center  group size-10 outline-none data-[focus-visible]:ring-2 ring-brand-300",
+              questionSet.isPinned
+                ? "bg-brand-500/30 data-[hovered]:bg-brand-500/15"
+                : "data-[hovered]:bg-brand-500/20"
+            )}
+          >
+            <IconStar
+              className={clsx(
+                "transition-all",
+                questionSet.isPinned
+                  ? "fill-brand-400 stroke-brand-400"
+                  : "stroke-gray-300 group-data-[hovered]:stroke-brand-300"
+              )}
+            />
+          </Button>
+        </Tooltip>
       </div>
     </div>
   );

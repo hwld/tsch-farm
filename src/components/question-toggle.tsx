@@ -3,7 +3,7 @@ import { tv } from "tailwind-variants";
 import { IconCode } from "@tabler/icons-react";
 
 const button = tv({
-  base: "border rounded-full px-3 h-7 transition-colors flex items-center gap-1",
+  base: "border rounded-full px-3 min-h-7 transition-colors grid grid-cols-[auto_1fr] items-center justify-items-start gap-1 text-start",
   variants: {
     difficulty: {
       warm: "border-teal-600 hover:bg-teal-800/50 data-[selected=true]:bg-teal-800",

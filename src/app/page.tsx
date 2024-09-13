@@ -7,9 +7,9 @@ import { QuestionToggle } from "@/components/question-toggle";
 import { useQuestionSets } from "@/components/use-question-sets";
 import { Routes } from "@/lib/routes";
 import {
+  IconLayersOff,
   IconPlayerPlayFilled,
-  IconSelect,
-  IconStack2,
+  IconStarFilled,
 } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -19,6 +19,7 @@ export default function HomePage() {
   const {
     query: { status, questionSets },
   } = useQuestionSets();
+  const pinnedQuestionSets = questionSets?.filter((set) => set.isPinned);
 
   const [selected, setSelected] = useState<Set<number>>(new Set());
 
@@ -30,6 +31,7 @@ export default function HomePage() {
         title: "選んだ問題",
         questionIds: Array.from(selected),
         isBuildIn: false,
+        isPinned: false,
       })
     );
   };
@@ -41,7 +43,8 @@ export default function HomePage() {
           <div className="flex gap-4 items-end justify-between border-b border-border p-4 bg-gray-800">
             <div className="flex flex-col gap-2">
               <div className="grid grid-cols-[auto_1fr] items-center gap-1">
-                <IconStack2 className="size-5" /> 問題セット
+                <IconStarFilled className="size-5 text-brand-400" />{" "}
+                ピン留めされた問題セット
               </div>
               <div className="text-gray-300 text-xs">
                 複数の問題がまとめられた問題セットを一つ選んで挑戦することができます
@@ -56,19 +59,28 @@ export default function HomePage() {
             </ButtonLink>
           </div>
           <div className="border-border rounded-lg grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] auto-rows-min gap-2 p-4 overflow-auto">
-            {status === "success" &&
-              questionSets.map((set) => {
-                if (!set.questions.length) {
-                  return null;
-                }
+            {status === "success" && pinnedQuestionSets?.length
+              ? pinnedQuestionSets.map((set) => {
+                  return <PlayQuestionSetCard key={set.id} questionSet={set} />;
+                })
+              : null}
 
-                return <PlayQuestionSetCard key={set.id} questionSet={set} />;
-              })}
+            {status === "success" && pinnedQuestionSets?.length === 0 ? (
+              <div className="border border-border rounded p-4 grid grid-rows-[auto_auto_1fr] gap-4 place-items-center">
+                <IconLayersOff className="size-[100px] text-gray-400" />
+                ピン留めされている問題セットがありません
+                <ButtonLink
+                  leftIcon={IconStarFilled}
+                  href={Routes.questionSets()}
+                >
+                  ピン留めしに行く
+                </ButtonLink>
+              </div>
+            ) : null}
           </div>
         </div>
         <div className="border rounded-lg border-border grid grid-rows-[auto_1fr_auto] min-h-0 overflow-hidden">
           <div className="px-4 bg-gray-800 border-b border-border h-12 flex items-center gap-1">
-            <IconSelect className="size-5" />
             問題を選んで始める
           </div>
           <div className="flex gap-2 flex-wrap overflow-auto p-4">
