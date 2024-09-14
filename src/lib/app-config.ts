@@ -13,7 +13,7 @@ export const APP_CONFIG: AppConfig = {
   ],
 };
 
-type AppConfig = {
+export type AppConfig = {
   /**
    * localStorageのデータを変更したいときにversionを1つ上げる
    */
