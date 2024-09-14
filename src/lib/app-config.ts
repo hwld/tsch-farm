@@ -1,6 +1,7 @@
-import { questionSetSummariesKey } from "@/components/use-question-sets";
 import type { QuestionSetSummary } from "./question";
 import type { Equal, Expect } from "./utils";
+
+export const questionSetSummariesKey = "question-set-summaries";
 
 export const APP_CONFIG: AppConfig = {
   version: 1,

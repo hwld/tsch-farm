@@ -1,9 +1,27 @@
-import { useEffect, useState, type PropsWithChildren } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  type PropsWithChildren,
+} from "react";
 import {
   readLocalStorageValue,
   writeLocalStorageValue,
 } from "./use-local-storage";
 import { APP_CONFIG } from "@/lib/app-config";
+
+const IsAppInitialized = createContext<boolean | undefined>(undefined);
+
+export const useIsAppInitialized = () => {
+  const ctx = useContext(IsAppInitialized);
+
+  if (ctx === undefined) {
+    throw new Error("InitializeAppが存在しません");
+  }
+  1;
+  return ctx;
+};
 
 export const InitializeApp: React.FC<PropsWithChildren> = ({ children }) => {
   const [isInitialized, setIsInitialized] = useState(false);
@@ -13,7 +31,11 @@ export const InitializeApp: React.FC<PropsWithChildren> = ({ children }) => {
     setIsInitialized(true);
   }, []);
 
-  return isInitialized && children;
+  return (
+    <IsAppInitialized.Provider value={isInitialized}>
+      {children}
+    </IsAppInitialized.Provider>
+  );
 };
 
 const migrateLocalStorage = () => {

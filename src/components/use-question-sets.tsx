@@ -12,11 +12,9 @@ import {
   useMemo,
   type PropsWithChildren,
 } from "react";
-import { useIsServer } from "./use-is-server";
 import { useLocalStorage } from "./use-local-storage";
 import { useQuestions } from "./questions-provider";
-
-export const questionSetSummariesKey = "question-set-summaries";
+import { questionSetSummariesKey } from "@/lib/app-config";
 
 type QuestionSetsContext = {
   query:
@@ -52,10 +50,12 @@ export const QuestionSetsProvider: React.FC<PropsWithChildren> = ({
     defaultValue: defaultQuestionSetSummaries(allQuestions),
   });
 
-  const isServer = useIsServer();
+  const questionSetsQuery = useMemo((): QuestionSetsContext["query"] => {
+    if (questionSetSummaries.status === "loading") {
+      return { status: "loading", questionSets: undefined };
+    }
 
-  const questionSets = useMemo(() => {
-    return questionSetSummaries.map((summary): QuestionSet => {
+    const data = questionSetSummaries.data.map((summary): QuestionSet => {
       return {
         ...summary,
         questions: summary.questionIds
@@ -63,10 +63,16 @@ export const QuestionSetsProvider: React.FC<PropsWithChildren> = ({
           .filter((q) => q !== undefined),
       };
     });
+
+    return { status: "success", questionSets: data };
   }, [questionSetSummaries, allQuestions]);
 
   const addQuestionSet: QuestionSetsContext["addQuestionSet"] = useCallback(
     (data) => {
+      if (questionSetSummaries.status === "loading") {
+        return;
+      }
+
       const summary: QuestionSetSummary = {
         id: crypto.randomUUID(),
         isBuildIn: false,
@@ -81,7 +87,7 @@ export const QuestionSetsProvider: React.FC<PropsWithChildren> = ({
 
       // 開発時にuseEffectが2回実行される影響か、setStateが2回実行されてしまうので、更新関数を渡すのではなく、
       // 外側で新しい配列を作る
-      const newSummaries = [...questionSetSummaries, summary];
+      const newSummaries = [...questionSetSummaries.data, summary];
       setQuestionSetSummaries(newSummaries);
     },
     [allQuestions, questionSetSummaries, setQuestionSetSummaries]
@@ -90,7 +96,13 @@ export const QuestionSetsProvider: React.FC<PropsWithChildren> = ({
   const updateQuestionSet: QuestionSetsContext["updateQuestionSet"] =
     useCallback(
       (data) => {
-        const questionSet = questionSets.find((set) => set.id === data.id);
+        if (questionSetsQuery.status === "loading") {
+          return;
+        }
+
+        const questionSet = questionSetsQuery.questionSets.find(
+          (set) => set.id === data.id
+        );
         if (!questionSet) {
           throw new Error("存在しない問題セット");
         }
@@ -116,7 +128,7 @@ export const QuestionSetsProvider: React.FC<PropsWithChildren> = ({
           })
         );
       },
-      [allQuestions, questionSets, setQuestionSetSummaries]
+      [allQuestions, questionSetsQuery, setQuestionSetSummaries]
     );
 
   const removeQuestionSet: QuestionSetsContext["removeQuestionSet"] =
@@ -132,17 +144,14 @@ export const QuestionSetsProvider: React.FC<PropsWithChildren> = ({
       value={useMemo(
         (): QuestionSetsContext => ({
           // ビルド中のレンダリングと、ハイドレーション中はローディング状態にしておく
-          query: isServer
-            ? { status: "loading", questionSets: undefined }
-            : { status: "success", questionSets },
+          query: questionSetsQuery,
           addQuestionSet,
           updateQuestionSet,
           removeQuestionSet,
         }),
         [
           addQuestionSet,
-          isServer,
-          questionSets,
+          questionSetsQuery,
           removeQuestionSet,
           updateQuestionSet,
         ]
