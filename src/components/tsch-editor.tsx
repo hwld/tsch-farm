@@ -1,4 +1,3 @@
-import type { Question } from "@/lib/question";
 import { Editor, type EditorProps, type Monaco } from "@monaco-editor/react";
 import type { editor } from "monaco-editor";
 import {
@@ -10,6 +9,7 @@ import {
 } from "react";
 import { IconCode, IconLoader2 } from "@tabler/icons-react";
 import { useTypeDefs } from "./type-defs-provider";
+import type { Question } from "../lib/question";
 
 export type TschEditorCommand = {
   key: number;

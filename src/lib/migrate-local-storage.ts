@@ -1,16 +1,16 @@
-import { writeLocalStorageValue } from "@/components/use-local-storage";
 import { readLocalStorageValue } from "@mantine/hooks";
 import type { AppConfig } from "./app-config";
+import { writeLocalStorageValue } from "../components/use-local-storage";
+
+export const versionStorageKey = "version";
 
 export const migrateLocalStorage = (config: AppConfig) => {
-  const versionKey = "version";
-
   const storedVersion = readLocalStorageValue<number | null>({
-    key: versionKey,
+    key: versionStorageKey,
   });
 
   if (!storedVersion) {
-    writeLocalStorageValue({ key: versionKey, value: config.version });
+    writeLocalStorageValue({ key: versionStorageKey, value: config.version });
     return;
   }
 
@@ -32,5 +32,5 @@ export const migrateLocalStorage = (config: AppConfig) => {
     writeLocalStorageValue({ key, value: data });
   });
 
-  writeLocalStorageValue({ key: versionKey, value: config.version });
+  writeLocalStorageValue({ key: versionStorageKey, value: config.version });
 };

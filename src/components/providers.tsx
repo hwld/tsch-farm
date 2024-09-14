@@ -1,6 +1,5 @@
 "use client";
 
-import type { Question } from "@/lib/question";
 import { useRouter } from "next/navigation";
 import { type PropsWithChildren } from "react";
 import { RouterProvider } from "react-aria-components";
@@ -9,6 +8,7 @@ import { IsServerProvider } from "./use-is-server";
 import { TypeDefsProvider } from "./type-defs-provider";
 import { QuestionsProvider } from "./questions-provider";
 import { InitializeApp } from "./initialize";
+import type { Question } from "../lib/question";
 
 type Props = { questions: Question[] } & PropsWithChildren;
 

@@ -1,5 +1,5 @@
-import type { Question } from "@/lib/question";
 import { createContext, useContext, type PropsWithChildren } from "react";
+import type { Question } from "../lib/question";
 
 const QuestionsContext = createContext<Question[] | undefined>(undefined);
 

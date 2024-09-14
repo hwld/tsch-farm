@@ -1,8 +1,3 @@
-import {
-  getSortedDifficultyCountEntries,
-  type Question,
-  type QuestionSet,
-} from "@/lib/question";
 import { QuestionDifficultyCountBadge } from "./question-difficulty-count-badge";
 import {
   IconBoxMultiple,
@@ -13,7 +8,6 @@ import {
   IconStar,
   IconTrash,
 } from "@tabler/icons-react";
-import { Routes } from "@/lib/routes";
 import { Button, Link } from "react-aria-components";
 import { IconButton } from "./icon-button";
 import { Menu, MenuItem, MenuSeparator } from "./menu";
@@ -22,6 +16,12 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Tooltip } from "./tooltip";
 import clsx from "clsx";
+import {
+  getSortedDifficultyCountEntries,
+  type Question,
+  type QuestionSet,
+} from "../lib/question";
+import { Routes } from "../lib/routes";
 
 const Title: React.FC<{ title: string }> = ({ title }) => {
   return (

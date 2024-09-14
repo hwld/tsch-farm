@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import clsx from "clsx";
-import { Sidebar } from "@/components/sidebar";
-import { Providers } from "@/components/providers";
-import { getQuestions } from "@/lib/get-questions";
 import { Suspense } from "react";
 import { Toaster, type ToastT } from "sonner";
+import { getQuestions } from "../lib/get-questions";
+import { Providers } from "../components/providers";
+import { Sidebar } from "../components/sidebar";
 
 const inter = Inter({ subsets: ["latin"] });
 

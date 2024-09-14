@@ -3,15 +3,15 @@ import clsx from "clsx";
 import { Input, Switch } from "react-aria-components";
 import { QuestionWithCodeToggle } from "./question-with-code-toggle";
 import { TschEditor } from "./tsch-editor";
-import {
-  type Question,
-  type QuestionSetFormData,
-  questionSetFormSchema,
-} from "@/lib/question";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, type ReactNode } from "react";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { useQuestions } from "./questions-provider";
+import {
+  type QuestionSetFormData,
+  type Question,
+  questionSetFormSchema,
+} from "../lib/question";
 
 type Props = {
   actions?: ReactNode;

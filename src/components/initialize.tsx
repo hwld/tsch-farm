@@ -5,8 +5,8 @@ import {
   useState,
   type PropsWithChildren,
 } from "react";
-import { APP_CONFIG } from "@/lib/app-config";
-import { migrateLocalStorage } from "@/lib/migrate-local-storage";
+import { APP_CONFIG } from "../lib/app-config";
+import { migrateLocalStorage } from "../lib/migrate-local-storage";
 
 const IsAppInitialized = createContext<boolean | undefined>(undefined);
 

@@ -1,16 +1,16 @@
 "use client";
 
-import { Button } from "@/components/button";
-import { QuestionSetForm } from "@/components/question-set-form";
 import { IconPencil } from "@tabler/icons-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useIsNavigatedFromApp } from "../use-is-navigated-from-app";
-import { Routes } from "@/lib/routes";
-import { useQuestionSet } from "@/components/use-question-set";
 import { z } from "zod";
-import type { QuestionSetFormData } from "@/lib/question";
-import { useQuestionSets } from "@/components/use-question-sets";
 import { toast } from "sonner";
+import { QuestionSetForm } from "../../../components/question-set-form";
+import { useQuestionSet } from "../../../components/use-question-set";
+import { useQuestionSets } from "../../../components/use-question-sets";
+import type { QuestionSetFormData } from "../../../lib/question";
+import { Routes } from "../../../lib/routes";
+import { Button } from "../../../components/button";
 
 const UpdateQuestionSetPage: React.FC = () => {
   const id = z.string().parse(useSearchParams().get("id"));

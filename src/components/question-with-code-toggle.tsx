@@ -1,8 +1,8 @@
-import type { Question } from "@/lib/question";
 import { IconCode } from "@tabler/icons-react";
 import { Button as RaButton } from "react-aria-components";
 import { tv } from "tailwind-variants";
 import { Tooltip } from "./tooltip";
+import type { Question } from "../lib/question";
 
 const toggle = tv({
   slots: {

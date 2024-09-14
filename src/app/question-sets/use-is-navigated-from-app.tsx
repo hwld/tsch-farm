@@ -1,6 +1,6 @@
-import { isNavigatedfromAppQueryName } from "@/lib/routes";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import { isNavigatedfromAppQueryName } from "../../lib/routes";
 
 /**
  *  ページがアプリ内から遷移されたか

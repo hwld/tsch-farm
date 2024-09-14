@@ -1,11 +1,14 @@
 import { useSearchParams } from "next/navigation";
-import { playQuestionSetQueryName } from "@/lib/routes";
-import { questionSetSummarySchema, type QuestionSet } from "@/lib/question";
-import { shuffle } from "@/lib/shuffle";
 import { useMemo } from "react";
-import { useQuestionSets } from "@/components/use-question-sets";
-import { isUnorderedEqual } from "@/lib/utils";
-import { useQuestions } from "@/components/questions-provider";
+import { useQuestions } from "../../../components/questions-provider";
+import { useQuestionSets } from "../../../components/use-question-sets";
+import {
+  type QuestionSet,
+  questionSetSummarySchema,
+} from "../../../lib/question";
+import { playQuestionSetQueryName } from "../../../lib/routes";
+import { shuffle } from "../../../lib/shuffle";
+import { isUnorderedEqual } from "../../../lib/utils";
 
 type QuestionSetForPlay = QuestionSet & { isOwned: boolean };
 

@@ -1,10 +1,10 @@
 "use client";
 
-import { QuestionSetCard } from "@/components/question-set-card";
-import { useQuestionSets } from "@/components/use-question-sets";
-import { Routes } from "@/lib/routes";
 import { IconPlus, IconStack2 } from "@tabler/icons-react";
 import Link from "next/link";
+import { QuestionSetCard } from "../../components/question-set-card";
+import { useQuestionSets } from "../../components/use-question-sets";
+import { Routes } from "../../lib/routes";
 
 const QuestionSetsPage: React.FC = () => {
   const {

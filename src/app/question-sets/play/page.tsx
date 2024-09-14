@@ -1,8 +1,5 @@
 "use client";
 
-import { Button, ButtonGroup } from "@/components/button";
-import { Tooltip } from "@/components/tooltip";
-import { TschEditor } from "@/components/tsch-editor";
 import type { Monaco } from "@monaco-editor/react";
 import {
   IconBoxMultiple,
@@ -16,8 +13,11 @@ import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import { usePlayQuestionSet } from "./use-play-question-set";
-import { useQuestionSets } from "@/components/use-question-sets";
 import { toast } from "sonner";
+import { Button, ButtonGroup } from "../../../components/button";
+import { TschEditor } from "../../../components/tsch-editor";
+import { useQuestionSets } from "../../../components/use-question-sets";
+import { Tooltip } from "../../../components/tooltip";
 
 const getQuestionId = (id: number) => `question-${id}`;
 

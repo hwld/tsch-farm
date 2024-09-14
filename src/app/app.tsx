@@ -2,7 +2,7 @@
 import { Editor, Monaco, type EditorProps } from "@monaco-editor/react";
 import { useRef } from "react";
 import type { editor } from "monaco-editor";
-import type { Question } from "@/lib/question";
+import type { Question } from "../lib/question";
 
 type Props = { questions: Question[] };
 

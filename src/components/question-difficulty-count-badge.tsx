@@ -1,5 +1,5 @@
-import type { Question } from "@/lib/question";
 import { tv } from "tailwind-variants";
+import type { Question } from "../lib/question";
 
 const badge = tv({
   base: "rounded overflow-hidden h-5 flex items-center border text-xs",

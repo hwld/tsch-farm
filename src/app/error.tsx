@@ -1,8 +1,8 @@
 "use client";
 
-import { ButtonLink } from "@/components/button";
-import { Routes } from "@/lib/routes";
 import { IconAlertCircle, IconHome } from "@tabler/icons-react";
+import { ButtonLink } from "../components/button";
+import { Routes } from "../lib/routes";
 
 export default function Error() {
   return (

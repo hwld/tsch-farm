@@ -1,11 +1,4 @@
 import {
-  defaultQuestionSetSummaries,
-  validateQuestionSetSummary,
-  type QuestionSet,
-  type QuestionSetFormData,
-  type QuestionSetSummary,
-} from "@/lib/question";
-import {
   createContext,
   useCallback,
   useContext,
@@ -14,7 +7,14 @@ import {
 } from "react";
 import { useLocalStorage } from "./use-local-storage";
 import { useQuestions } from "./questions-provider";
-import { questionSetSummariesKey } from "@/lib/app-config";
+import {
+  defaultQuestionSetSummaries,
+  validateQuestionSetSummary,
+  type QuestionSet,
+  type QuestionSetFormData,
+  type QuestionSetSummary,
+} from "../lib/question";
+import { questionSetSummariesKey } from "../lib/app-config";
 
 type QuestionSetsContext = {
   query:

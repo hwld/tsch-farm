@@ -1,6 +1,6 @@
-import type { Question } from "@/lib/question";
 import { tv } from "tailwind-variants";
 import { IconCode } from "@tabler/icons-react";
+import type { Question } from "../lib/question";
 
 const button = tv({
   base: "border rounded-full px-3 min-h-7 transition-colors grid grid-cols-[auto_1fr] items-center justify-items-start gap-1 text-start",

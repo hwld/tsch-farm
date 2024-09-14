@@ -1,5 +1,5 @@
+import type { QuestionSet } from "../lib/question";
 import { useQuestionSets } from "./use-question-sets";
-import type { QuestionSet } from "@/lib/question";
 import { useMemo } from "react";
 
 type UseQuestionSetResult =

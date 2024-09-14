@@ -4,9 +4,9 @@ import { IconHome, IconPlus, IconStack2, type Icon } from "@tabler/icons-react";
 import { AppIcon } from "./app-icon";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
-import { pathName, Routes, type Route } from "@/lib/routes";
 import { Tooltip } from "./tooltip";
 import { Link, type LinkProps } from "react-aria-components";
+import { pathName, Routes, type Route } from "../lib/routes";
 
 export const Sidebar: React.FC = () => {
   const pathname = usePathname();
