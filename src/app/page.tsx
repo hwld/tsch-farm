@@ -1,9 +1,9 @@
 "use client";
 
 import { Button, ButtonLink } from "@/components/button";
-import { useQuestions } from "@/components/providers";
 import { PlayQuestionSetCard } from "@/components/question-set-card";
 import { QuestionToggle } from "@/components/question-toggle";
+import { useQuestions } from "@/components/questions-provider";
 import { useQuestionSets } from "@/components/use-question-sets";
 import { Routes } from "@/lib/routes";
 import {

@@ -1,11 +1,11 @@
 import { useSearchParams } from "next/navigation";
-import { useQuestions } from "../../../components/providers";
 import { playQuestionSetQueryName } from "@/lib/routes";
 import { questionSetSummarySchema, type QuestionSet } from "@/lib/question";
 import { shuffle } from "@/lib/shuffle";
 import { useMemo } from "react";
 import { useQuestionSets } from "@/components/use-question-sets";
 import { isUnorderedEqual } from "@/lib/utils";
+import { useQuestions } from "@/components/questions-provider";
 
 type QuestionSetForPlay = QuestionSet & { isOwned: boolean };
 

@@ -38,7 +38,7 @@ export default async function RootLayout({
           "grid grid-cols-[80px_1fr] grid-rows-1 h-[100dvh] min-h-0 bg-brand-500"
         )}
       >
-        <Providers value={questions}>
+        <Providers questions={questions}>
           <div className="py-5">
             <Sidebar />
           </div>

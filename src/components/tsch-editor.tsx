@@ -8,8 +8,8 @@ import {
   type CSSProperties,
   type ReactNode,
 } from "react";
-import { useTypeDefs } from "./providers";
 import { IconCode, IconLoader2 } from "@tabler/icons-react";
+import { useTypeDefs } from "./type-defs-provider";
 
 export type TschEditorCommand = {
   key: number;

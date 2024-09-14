@@ -5,8 +5,6 @@ import {
   type QuestionSetFormData,
   type QuestionSetSummary,
 } from "@/lib/question";
-import { useLocalStorage } from "@mantine/hooks";
-import { useQuestions } from "./providers";
 import {
   createContext,
   useCallback,
@@ -15,6 +13,10 @@ import {
   type PropsWithChildren,
 } from "react";
 import { useIsServer } from "./use-is-server";
+import { useLocalStorage } from "./use-local-storage";
+import { useQuestions } from "./questions-provider";
+
+export const questionSetSummariesKey = "question-set-summaries";
 
 type QuestionSetsContext = {
   query:
@@ -46,7 +48,7 @@ export const QuestionSetsProvider: React.FC<PropsWithChildren> = ({
   const [questionSetSummaries, setQuestionSetSummaries] = useLocalStorage<
     QuestionSetSummary[]
   >({
-    key: "question-sets",
+    key: questionSetSummariesKey,
     defaultValue: defaultQuestionSetSummaries(allQuestions),
   });
 

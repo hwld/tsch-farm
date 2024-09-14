@@ -11,7 +11,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, type ReactNode } from "react";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
-import { useQuestions } from "./providers";
+import { useQuestions } from "./questions-provider";
 
 type Props = {
   actions?: ReactNode;
