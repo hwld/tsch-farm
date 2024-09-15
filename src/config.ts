@@ -2,7 +2,9 @@ import { defineAppConfig } from "./lib/app-config";
 import type { QuestionSetSummary } from "./lib/question";
 import type { Equal, Expect } from "./lib/utils";
 
+export const versionStorageKey = "version";
 export const questionSetSummariesKey = "question-set-summaries";
+export const allLocalStorageKeys = [versionStorageKey, questionSetSummariesKey];
 
 export const APP_CONFIG = defineAppConfig({
   version: 1,

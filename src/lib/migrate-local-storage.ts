@@ -1,8 +1,7 @@
 import { readLocalStorageValue } from "@mantine/hooks";
 import type { AppConfig } from "./app-config";
 import { writeLocalStorageValue } from "../components/use-local-storage";
-
-export const versionStorageKey = "version";
+import { versionStorageKey } from "../config";
 
 export const migrateLocalStorage = (config: AppConfig) => {
   const storedVersion = readLocalStorageValue<number | null>({

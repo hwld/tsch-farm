@@ -16,11 +16,15 @@ const button = tv({
   variants: {
     size: { default: "", sm: { base: "text-xs" } },
     color: {
-      primary: { base: "bg-brand-600 hover:bg-brand-700", leftIcon: "" },
-      secondary: {
-        base: "bg-gray-800 border border-border hover:bg-gray-700",
+      primary: {
+        base: "bg-brand-600 data-[hovered]:bg-brand-700",
         leftIcon: "",
       },
+      secondary: {
+        base: "bg-gray-800 border border-border data-[hovered]:bg-gray-700",
+        leftIcon: "",
+      },
+      destructive: { base: "bg-red-600 data-[hovered]:bg-red-700" },
     },
     isDisabled: { true: "opacity-50 pointer-events-none", false: "" },
   },

@@ -1,11 +1,9 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import {
-  migrateLocalStorage,
-  versionStorageKey,
-} from "./migrate-local-storage";
+import { migrateLocalStorage } from "./migrate-local-storage";
 import { readLocalStorageValue } from "@mantine/hooks";
 import { writeLocalStorageValue } from "../components/use-local-storage";
 import type { AppConfig } from "./app-config";
+import { versionStorageKey } from "../config";
 
 describe("migrateLocalStorage", () => {
   beforeEach(() => {
