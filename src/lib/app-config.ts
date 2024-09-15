@@ -1,18 +1,3 @@
-import type { QuestionSetSummary } from "./question";
-import type { Equal, Expect } from "./utils";
-
-export const questionSetSummariesKey = "question-set-summaries";
-
-export const APP_CONFIG: AppConfig = {
-  version: 1,
-  migrationConfig: [
-    {
-      key: questionSetSummariesKey,
-      migrations: {},
-    },
-  ],
-};
-
 export type AppConfig = {
   /**
    * localStorageのデータを変更したいときにversionを1つ上げる
@@ -38,17 +23,36 @@ export type AppConfig = {
   }[];
 };
 
-// 型が変わったときにエラーにして、versionを上げてmigrationsを書くように伝える
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-type _CHECKER1 = Expect<
-  Equal<
-    QuestionSetSummary,
-    {
-      id: string;
-      title: string;
-      questionIds: number[];
-      isBuildIn: boolean;
-      isPinned: boolean;
-    }
-  >
->;
+export const defineAppConfig = (config: AppConfig): AppConfig => {
+  const allMigrationKeys = config.migrationConfig.flatMap((config) => {
+    return Object.keys(config.migrations).map((key) => Number(key));
+  });
+
+  if (config.version < 1) {
+    throw new Error("versionは0より大きい必要がある");
+  }
+
+  if (config.version > 1 && allMigrationKeys.length === 0) {
+    throw new Error("versionが1よりも大きいときにはマイグレーションが必要");
+  }
+
+  if (
+    allMigrationKeys.length > 0 &&
+    allMigrationKeys.every((version) => version >= config.version)
+  ) {
+    throw new Error("version以上のバージョンのマイグレーションを検出");
+  }
+
+  if (allMigrationKeys.length > 0 && allMigrationKeys.some((key) => key < 1)) {
+    throw new Error("マイグレーションのバージョンは0より大きい必要がある");
+  }
+
+  if (
+    allMigrationKeys.length > 0 &&
+    allMigrationKeys.every((key) => key !== config.version - 1)
+  ) {
+    throw new Error("version - 1のマイグレーションが存在しない");
+  }
+
+  return config;
+};

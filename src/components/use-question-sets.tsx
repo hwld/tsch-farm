@@ -14,7 +14,7 @@ import {
   type QuestionSetFormData,
   type QuestionSetSummary,
 } from "../lib/question";
-import { questionSetSummariesKey } from "../lib/app-config";
+import { questionSetSummariesKey } from "../config";
 
 type QuestionSetsContext = {
   query:
