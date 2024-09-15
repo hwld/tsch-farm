@@ -21,12 +21,12 @@ export const migrateLocalStorage = (config: AppConfig) => {
   config.migrationConfig.forEach(({ key, migrations }) => {
     let data = readLocalStorageValue({ key });
 
-    for (
-      let version = storedVersion;
-      migrations[version] !== undefined;
-      version++
-    ) {
-      data = migrations[version](data);
+    for (let version = storedVersion; version < config.version; version++) {
+      const migrateFn = migrations[version];
+      if (!migrateFn) {
+        continue;
+      }
+      data = migrateFn(data);
     }
 
     writeLocalStorageValue({ key, value: data });

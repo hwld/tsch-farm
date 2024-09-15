@@ -12,7 +12,7 @@ describe("migrateLocalStorage", () => {
     localStorage.clear();
   });
 
-  it("localStorage内のバージョン < アプリのバージョンのとき、正しい順序でマイグレーションが実行される", () => {
+  it("一つのkey-valueに対してマイグレーションが実行される", () => {
     const storageKey = "data";
     type SchemaV1 = { id: number; title: string; questionsIds: number[] };
     type SchemaV2 = {
@@ -85,5 +85,49 @@ describe("migrateLocalStorage", () => {
         description: "",
       },
     ] satisfies SchemaV3[]);
+  });
+
+  it("2つのkey-valueに対してマイグレーションが実行される", () => {
+    const keyA = "keyA";
+    type ASchemaV1 = "1";
+    type ASchemaV3 = "3";
+    type ASchemaV5 = "5";
+
+    const keyB = "keyB";
+    type BSchemaV2 = "2";
+    type BSchemaV4 = "4";
+    type BSchemaV6 = "6";
+
+    const config: AppConfig = {
+      version: 5,
+      migrationConfig: [
+        {
+          key: keyA,
+          migrations: {
+            1: (_: ASchemaV1): ASchemaV3 => "3",
+            3: (_: ASchemaV3): ASchemaV5 => "5",
+          },
+        },
+        {
+          key: keyB,
+          migrations: {
+            2: (_: BSchemaV2): BSchemaV4 => "4",
+            4: (_: BSchemaV4): BSchemaV6 => "6",
+          },
+        },
+      ],
+    };
+
+    writeLocalStorageValue({ key: versionStorageKey, value: 1 });
+    writeLocalStorageValue({ key: keyA, value: "1" });
+    writeLocalStorageValue({ key: keyB, value: "2" });
+
+    migrateLocalStorage(config);
+
+    const dataA = readLocalStorageValue({ key: keyA });
+    const dataB = readLocalStorageValue({ key: keyB });
+
+    expect(dataA).toBe("5" satisfies ASchemaV5);
+    expect(dataB).toBe("6" satisfies BSchemaV6);
   });
 });
