@@ -90,14 +90,8 @@ const PlayQuestionSetPage: React.FC = () => {
           handleGoPrevQuestion();
         },
       },
-      {
-        key: monaco.KeyCode.Escape,
-        handler: () => {
-          handleEnd();
-        },
-      },
     ],
-    [handleEnd, handleGoNextQuestion, handleGoPrevQuestion]
+    [handleGoNextQuestion, handleGoPrevQuestion]
   );
 
   return (
@@ -129,15 +123,9 @@ const PlayQuestionSetPage: React.FC = () => {
                     </Button>
                   </Tooltip>
                 </ButtonGroup>
-                <Tooltip label="問題を終了する (Esc)">
-                  <Button
-                    color="secondary"
-                    leftIcon={IconX}
-                    onPress={handleEnd}
-                  >
-                    終了する
-                  </Button>
-                </Tooltip>
+                <Button color="secondary" leftIcon={IconX} onPress={handleEnd}>
+                  終了する
+                </Button>
               </>
             }
           />
