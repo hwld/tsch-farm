@@ -51,6 +51,7 @@ export const TschEditor: React.FC<Props> = ({
 
     monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
       ...monaco.languages.typescript.typescriptDefaults.getCompilerOptions(),
+      strict: true,
       moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
       module: monaco.languages.typescript.ModuleKind.ESNext,
     });
