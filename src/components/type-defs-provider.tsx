@@ -23,13 +23,18 @@ export const TypeDefsProvider: React.FC<PropsWithChildren> = ({ children }) => {
     const fetchTypeDef = async () => {
       const moduleName = "@type-challenges/utils";
 
-      const res = await fetch(`https://esm.sh/${moduleName}`);
-      const url = res.headers.get("x-typescript-types");
-      if (!url) {
-        return;
-      }
+      // TODO: 前までは動いてたのだが、最近、esm.shからのレスポンスにx-typescript-typesヘッダーは含まれるのだが、
+      // access-control-expose-headersに含まれないようになってしまった？　ため、直接ファイルを指定する
 
-      const typeDef = await (await fetch(url)).text();
+      // const res = await fetch(`https://esm.sh/${moduleName}`);
+      // const url = res.headers.get("x-typescript-types");
+      // if (!url) {
+      //   return;
+      // }
+
+      const typeDef = await (
+        await fetch(`https://esm.sh/${moduleName}/index.d.ts`)
+      ).text();
       setTypeDef(new Map([[moduleName, typeDef]]));
     };
 
