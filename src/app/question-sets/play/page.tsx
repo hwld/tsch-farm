@@ -9,7 +9,6 @@ import {
   IconDownload,
   IconX,
 } from "@tabler/icons-react";
-import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import { usePlayQuestionSet } from "./use-play-question-set";
@@ -18,12 +17,20 @@ import { Button, ButtonGroup } from "../../../components/button";
 import { TschEditor } from "../../../components/tsch-editor";
 import { useQuestionSets } from "../../../components/use-question-sets";
 import { Tooltip } from "../../../components/tooltip";
+import { Question } from "../../../lib/question";
+import { tv } from "tailwind-variants";
 
 const getQuestionId = (id: number) => `question-${id}`;
 
 const PlayQuestionSetPage: React.FC = () => {
   const router = useRouter();
   const questionSet = usePlayQuestionSet();
+
+  // はじめはすべての問題にエラーが存在する
+  const [errorQuestionIds, setErrorQuestionIds] = useState(
+    questionSet.questions.map((q) => q.id)
+  );
+
   const { addQuestionSet } = useQuestionSets();
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -57,6 +64,20 @@ const PlayQuestionSetPage: React.FC = () => {
     setCurrentQuestionIndex(newIndex);
     focusQuestion(questionSet.questions[newIndex].id);
   }, [currentQuestionIndex, hasNextQuestion, questionSet.questions]);
+
+  const handleChangeErrorQuestionIds = (newErrorQuestionIds: number[]) => {
+    if (!currentQuestion) {
+      return;
+    }
+
+    if (newErrorQuestionIds.includes(currentQuestion.id)) {
+      setErrorQuestionIds((paths) =>
+        Array.from(new Set([...paths, currentQuestion.id]))
+      );
+    } else {
+      setErrorQuestionIds((ids) => ids.filter((i) => i !== currentQuestion.id));
+    }
+  };
 
   const handleEnd = useCallback(() => {
     router.back();
@@ -93,14 +114,14 @@ const PlayQuestionSetPage: React.FC = () => {
     ],
     [handleGoNextQuestion, handleGoPrevQuestion]
   );
-
   return (
     <div className="grid-cols-[1fr_300px] min-h-0 min-w-0 grid p-4 gap-4 overflow-y-hidden">
       <div className="overflow-hidden">
         {currentQuestion && (
           <TschEditor
+            currentQuestion={currentQuestion}
+            onChangeErrorQuestionIds={handleChangeErrorQuestionIds}
             buildCommands={buildTschEditorCommands}
-            question={currentQuestion}
             footer={
               <>
                 <ButtonGroup>
@@ -139,23 +160,15 @@ const PlayQuestionSetPage: React.FC = () => {
         <div className="flex flex-col overflow-auto">
           {questionSet.questions.map((q, index) => {
             return (
-              <button
-                suppressHydrationWarning
+              <QuestionListItem
                 key={q.id}
-                id={getQuestionId(q.id)}
-                className={clsx(
-                  "border-b border-border p-2 text-start grid grid-cols-[auto_1fr] gap-1 items-center transition-colors",
-                  currentQuestion?.id === q.id
-                    ? "bg-gray-700"
-                    : "hover:bg-gray-800"
-                )}
+                question={q}
                 onClick={() => {
                   setCurrentQuestionIndex(index);
                 }}
-              >
-                <IconCode className="size-4" />
-                {q.title}
-              </button>
+                isCurrent={currentQuestion?.id === q.id}
+                isError={errorQuestionIds.includes(q.id)}
+              />
             );
           })}
         </div>
@@ -176,3 +189,41 @@ const PlayQuestionSetPage: React.FC = () => {
 };
 
 export default PlayQuestionSetPage;
+
+const item = tv({
+  base: "border-b border-border p-2 text-start grid grid-cols-[auto_1fr] gap-1 items-center transition-colors",
+  variants: {
+    isCurrent: { true: "", false: "hover:bg-white/5" },
+    isError: { true: "text-red-400", false: "text-lime-400" },
+  },
+  compoundVariants: [
+    { isCurrent: true, isError: true, className: "bg-red-500/15" },
+    {
+      isCurrent: true,
+      isError: false,
+      className: "bg-lime-500/15",
+    },
+  ],
+});
+
+const QuestionListItem: React.FC<{
+  question: Question;
+  isCurrent: boolean;
+  isError: boolean;
+  onClick: () => void;
+}> = ({ question, onClick, isCurrent, isError }) => {
+  const classNames = item({ isCurrent, isError });
+
+  return (
+    <button
+      suppressHydrationWarning
+      key={question.id}
+      id={getQuestionId(question.id)}
+      className={classNames}
+      onClick={onClick}
+    >
+      <IconCode className="size-4" />
+      {question.title}
+    </button>
+  );
+};

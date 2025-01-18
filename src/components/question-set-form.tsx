@@ -154,7 +154,7 @@ export const QuestionSetForm: React.FC<Props> = ({
       <div>
         <TschEditor
           title={shownQuestion.title}
-          question={shownQuestion}
+          currentQuestion={shownQuestion}
           readOnly
         />
       </div>
