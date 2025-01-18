@@ -10,7 +10,7 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { usePlayQuestionSet } from "./use-play-question-set";
 import { toast } from "sonner";
 import { Button, ButtonGroup } from "../../../components/button";
@@ -19,6 +19,8 @@ import { useQuestionSets } from "../../../components/use-question-sets";
 import { Tooltip } from "../../../components/tooltip";
 import { Question } from "../../../lib/question";
 import { tv } from "tailwind-variants";
+import { easeOutQuad } from "tween-functions";
+import ReactConfetti from "react-confetti";
 
 const getQuestionId = (id: number) => `question-${id}`;
 
@@ -66,22 +68,23 @@ const PlayQuestionSetPage: React.FC = () => {
     router.back();
   }, [router]);
 
+  const [showConfetti, setShowConfetti] = useState(false);
+
   const handleChangeErrorQuestionIds = (newErrorQuestionIds: number[]) => {
     if (!currentQuestion) {
       return;
     }
 
     if (newErrorQuestionIds.includes(currentQuestion.id)) {
-      setCompletedQuestionIds((paths) =>
-        Array.from(new Set([...paths, currentQuestion.id]))
-      );
       setCompletedQuestionIds((ids) =>
         ids.filter((i) => i !== currentQuestion.id)
       );
-    } else {
-      setCompletedQuestionIds((paths) =>
-        Array.from(new Set([...paths, currentQuestion.id]))
-      );
+    } else if (!completedQuestionIds.includes(currentQuestion.id)) {
+      setCompletedQuestionIds((paths) => [...paths, currentQuestion.id]);
+
+      if (completedQuestionIds.length + 1 === questionSet.questions.length) {
+        setShowConfetti(true);
+      }
     }
   };
 
@@ -191,6 +194,7 @@ const PlayQuestionSetPage: React.FC = () => {
           </div>
         )}
       </div>
+      <Confetti isShow={showConfetti} onChangeShow={setShowConfetti} />
     </div>
   );
 };
@@ -232,4 +236,45 @@ const QuestionListItem: React.FC<{
       {question.title}
     </button>
   );
+};
+
+const Confetti: React.FC<{
+  isShow: boolean;
+  onChangeShow: (isShow: boolean) => void;
+}> = ({ isShow, onChangeShow }) => {
+  const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    const update = () => {
+      setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+    };
+
+    update();
+
+    window.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("resize", update);
+    };
+  }, []);
+
+  return isShow ? (
+    <ReactConfetti
+      recycle={false}
+      width={windowSize.width}
+      height={windowSize.height}
+      numberOfPieces={1000}
+      initialVelocityX={20}
+      initialVelocityY={40}
+      gravity={0.5}
+      tweenDuration={1500}
+      tweenFunction={easeOutQuad}
+      confettiSource={{
+        x: 0,
+        y: windowSize.height,
+        w: windowSize.width,
+        h: 0,
+      }}
+      onConfettiComplete={() => onChangeShow(false)}
+    />
+  ) : undefined;
 };
