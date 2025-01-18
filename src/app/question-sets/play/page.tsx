@@ -30,8 +30,6 @@ const PlayQuestionSetPage: React.FC = () => {
     []
   );
 
-  const { addQuestionSet } = useQuestionSets();
-
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const currentQuestion = questionSet.questions.at(currentQuestionIndex);
 
@@ -64,6 +62,10 @@ const PlayQuestionSetPage: React.FC = () => {
     focusQuestion(questionSet.questions[newIndex].id);
   }, [currentQuestionIndex, hasNextQuestion, questionSet.questions]);
 
+  const handleEnd = useCallback(() => {
+    router.back();
+  }, [router]);
+
   const handleChangeErrorQuestionIds = (newErrorQuestionIds: number[]) => {
     if (!currentQuestion) {
       return;
@@ -83,9 +85,7 @@ const PlayQuestionSetPage: React.FC = () => {
     }
   };
 
-  const handleEnd = useCallback(() => {
-    router.back();
-  }, [router]);
+  const { addQuestionSet } = useQuestionSets();
 
   const handleImport = () => {
     try {
@@ -104,12 +104,14 @@ const PlayQuestionSetPage: React.FC = () => {
   const buildTschEditorCommands = useCallback(
     (monaco: Monaco) => [
       {
+        id: "next-question",
         key: monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter,
         handler: () => {
           handleGoNextQuestion();
         },
       },
       {
+        id: "prev-question",
         key: monaco.KeyMod.Shift | monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter,
         handler: () => {
           handleGoPrevQuestion();
@@ -118,6 +120,7 @@ const PlayQuestionSetPage: React.FC = () => {
     ],
     [handleGoNextQuestion, handleGoPrevQuestion]
   );
+
   return (
     <div className="grid-cols-[1fr_300px] min-h-0 min-w-0 grid p-4 gap-4 overflow-y-hidden">
       <div className="overflow-hidden">
@@ -125,7 +128,7 @@ const PlayQuestionSetPage: React.FC = () => {
           <TschEditor
             currentQuestion={currentQuestion}
             onChangeErrorQuestionIds={handleChangeErrorQuestionIds}
-            buildCommands={buildTschEditorCommands}
+            onBuildCommands={buildTschEditorCommands}
             footer={
               <>
                 <ButtonGroup>

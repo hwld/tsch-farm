@@ -1,5 +1,4 @@
-import { Editor, type EditorProps, type Monaco } from "@monaco-editor/react";
-import { type editor } from "monaco-editor";
+import { Editor, type Monaco } from "@monaco-editor/react";
 import {
   useEffect,
   useRef,
@@ -17,6 +16,7 @@ const getQuestionIdFromPath = (path: string) =>
   Number(path.split("/")[1].split(".ts")[0]);
 
 export type TschEditorCommand = {
+  id: string;
   key: number;
   handler: () => void;
 };
@@ -33,7 +33,7 @@ type Props = {
    *  なぜかビルドが失敗したり開発サーバーが遅くなるので、Monacoを受け取ってmonaco.KeyCodeやmonaco.KeyModを使用させるために
    *  コマンドを返す関数を受け取る
    */
-  buildCommands?: (monaco: Monaco) => TschEditorCommand[];
+  onBuildCommands?: (monaco: Monaco) => TschEditorCommand[];
 };
 
 export const TschEditor: React.FC<Props> = ({
@@ -42,19 +42,16 @@ export const TschEditor: React.FC<Props> = ({
   readOnly,
   title = "Code",
   onChangeErrorQuestionIds,
-  buildCommands,
+  onBuildCommands,
 }) => {
-  const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
   const monacoRef = useRef<Monaco | null>(null);
 
   // マウントしているときだけ実行したいuseEffectがあるので、そこで使用する
-  // たとえばmonacoの初期化をuseEffectで行いたいとき、初回のuseEffectではmonacoRefがセットされていない
+  // 初回のuseEffectではmonacoRef.currentがセットされていないためこれを使って、
+  // trueになったときにmonacoRef.currentがセットされていることを保証する
   const [isMounted, setIsMounted] = useState(false);
 
-  const typeDefs = useTypeDefs();
-
-  const handleMount: EditorProps["onMount"] = async (editor, monaco) => {
-    editorRef.current = editor;
+  const handleBeforeMount = async (monaco: Monaco) => {
     monacoRef.current = monaco;
 
     monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
@@ -69,24 +66,27 @@ export const TschEditor: React.FC<Props> = ({
 
   // commandsが変更されたときに、コマンドを追加し直す
   useEffect(() => {
-    const editor = editorRef.current;
     const monaco = monacoRef.current;
-    if (!isMounted || !editor || !monaco) {
+    if (!isMounted || !monaco) {
       return;
     }
 
-    const commands = buildCommands?.(monaco);
+    const commands = onBuildCommands?.(monaco);
 
-    commands?.forEach(({ key, handler }) => {
-      editor.addCommand(key, handler);
+    commands?.forEach(({ key, handler, id }) => {
+      monaco.editor.addKeybindingRule({ keybinding: key, command: id });
+      monaco.editor.addCommand({ id, run: handler });
     });
 
     return () => {
-      commands?.forEach(({ key }) => {
-        editor.addCommand(key, () => {});
+      commands?.forEach(({ key, id }) => {
+        monaco.editor.addKeybindingRule({ keybinding: key, command: null });
+        monaco.editor.addCommand({ id, run: () => {} });
       });
     };
-  }, [buildCommands, isMounted]);
+  }, [onBuildCommands, isMounted]);
+
+  const typeDefs = useTypeDefs();
 
   // typeDefsが変更されたときに、モデルを追加する
   useEffect(() => {
@@ -120,14 +120,7 @@ export const TschEditor: React.FC<Props> = ({
     }
   };
 
-  useEffect(() => {
-    return () => {
-      monacoRef.current?.editor.getModels().forEach((m) => {
-        m.dispose();
-      });
-    };
-  }, []);
-
+  // コードのエラー状況が更新されたときにハンドラを呼び出す
   useEffect(() => {
     if (!monacoRef.current || !isMounted) {
       return;
@@ -143,6 +136,8 @@ export const TschEditor: React.FC<Props> = ({
       const markers = monaco.editor.getModelMarkers({
         owner: "typescript",
       });
+
+      // すでに読み込み済みの問題のエラーだけが検出される
       const errorModelPaths = Array.from(
         new Set(
           markers
@@ -162,6 +157,14 @@ export const TschEditor: React.FC<Props> = ({
     };
   }, [onChangeErrorQuestionIds, isMounted]);
 
+  useEffect(() => {
+    return () => {
+      monacoRef.current?.editor.getModels().forEach((m) => {
+        m.dispose();
+      });
+    };
+  }, []);
+
   return (
     <div className="size-full bg-[#1e1e1e] border-border border rounded-lg overflow-hidden grid grid-rows-[auto_1fr_auto] min-w-0">
       <div className="p-2 text-xs flex gap-1 items-center bg-gray-800 border-border border-b">
@@ -174,7 +177,7 @@ export const TschEditor: React.FC<Props> = ({
         language="typescript"
         theme="vs-dark"
         onChange={handleChange}
-        onMount={handleMount}
+        beforeMount={handleBeforeMount}
         defaultValue={currentQuestion.code}
         loading={<IconLoader2 className="animate-spin size-8" />}
         className="min-h-0"
