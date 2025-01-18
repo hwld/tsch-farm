@@ -26,9 +26,8 @@ const PlayQuestionSetPage: React.FC = () => {
   const router = useRouter();
   const questionSet = usePlayQuestionSet();
 
-  // はじめはすべての問題にエラーが存在する
-  const [errorQuestionIds, setErrorQuestionIds] = useState(
-    questionSet.questions.map((q) => q.id)
+  const [completedQuestionIds, setCompletedQuestionIds] = useState<number[]>(
+    []
   );
 
   const { addQuestionSet } = useQuestionSets();
@@ -71,11 +70,16 @@ const PlayQuestionSetPage: React.FC = () => {
     }
 
     if (newErrorQuestionIds.includes(currentQuestion.id)) {
-      setErrorQuestionIds((paths) =>
+      setCompletedQuestionIds((paths) =>
         Array.from(new Set([...paths, currentQuestion.id]))
       );
+      setCompletedQuestionIds((ids) =>
+        ids.filter((i) => i !== currentQuestion.id)
+      );
     } else {
-      setErrorQuestionIds((ids) => ids.filter((i) => i !== currentQuestion.id));
+      setCompletedQuestionIds((paths) =>
+        Array.from(new Set([...paths, currentQuestion.id]))
+      );
     }
   };
 
@@ -167,7 +171,7 @@ const PlayQuestionSetPage: React.FC = () => {
                   setCurrentQuestionIndex(index);
                 }}
                 isCurrent={currentQuestion?.id === q.id}
-                isError={errorQuestionIds.includes(q.id)}
+                isError={!completedQuestionIds.includes(q.id)}
               />
             );
           })}
@@ -216,7 +220,6 @@ const QuestionListItem: React.FC<{
 
   return (
     <button
-      suppressHydrationWarning
       key={question.id}
       id={getQuestionId(question.id)}
       className={classNames}

@@ -1,5 +1,5 @@
 import { useSearchParams } from "next/navigation";
-import { useMemo } from "react";
+import { useMemo, useSyncExternalStore } from "react";
 import { useQuestions } from "../../../components/questions-provider";
 import { useQuestionSets } from "../../../components/use-question-sets";
 import {
@@ -24,6 +24,13 @@ export const usePlayQuestionSet = (): QuestionSetForPlay => {
     throw new Error("queryが存在しません");
   }
 
+  // SSR時とHydration時にはtrueになるようにしてハイドレーションエラーを回避する
+  const isSSR = useSyncExternalStore(
+    () => () => {},
+    () => false,
+    () => true
+  );
+
   const questionSet = useMemo(() => {
     const query = questionSetSummarySchema.parse(JSON.parse(queryRaw));
 
@@ -38,7 +45,8 @@ export const usePlayQuestionSet = (): QuestionSetForPlay => {
     const set: QuestionSetForPlay = {
       id: query.id,
       title: query.title,
-      questions: shuffle(questions),
+      // ハイドレーションエラーを防ぐためにSSR時には空にする
+      questions: isSSR ? [] : shuffle(questions),
       isBuildIn: query.isBuildIn,
       isPinned: query.isPinned,
       isOwned: !!questionSets?.find((mySet) => {
@@ -53,7 +61,7 @@ export const usePlayQuestionSet = (): QuestionSetForPlay => {
     };
 
     return set;
-  }, [allQuestions, queryRaw, questionSets]);
+  }, [allQuestions, isSSR, queryRaw, questionSets]);
 
   return questionSet;
 };
