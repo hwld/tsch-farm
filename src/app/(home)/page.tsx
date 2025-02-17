@@ -7,12 +7,12 @@ import {
 } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Button, ButtonLink } from "../components/button";
-import { PlayQuestionSetCard } from "../components/question-set-card";
-import { QuestionToggle } from "../components/question-toggle";
-import { useQuestions } from "../components/questions-provider";
-import { useQuestionSets } from "../components/use-question-sets";
-import { Routes } from "../lib/routes";
+import { Button, ButtonLink } from "../../components/button";
+import { PlayQuestionSetCard } from "../../components/question-set-card";
+import { QuestionToggle } from "../../components/question-toggle";
+import { useQuestions } from "../../components/questions-provider";
+import { useQuestionSets } from "../../components/use-question-sets";
+import { Routes } from "../../lib/routes";
 
 export default function HomePage() {
   const questions = useQuestions();
@@ -37,7 +37,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="grid grid-cols-[1fr_1fr] p-10 gap-4 min-h-0 h-full w-full">
+    <>
       <div className="grid grid-rows-[auto_1fr] rounded-lg border border-border overflow-hidden">
         <div className="flex gap-4 items-end justify-between border-b border-border p-4 bg-gray-800">
           <div className="flex flex-col gap-2">
@@ -113,6 +113,6 @@ export default function HomePage() {
           </Button>
         </div>
       </div>
-    </div>
+    </>
   );
 }
