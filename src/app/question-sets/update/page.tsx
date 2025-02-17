@@ -11,6 +11,7 @@ import { useQuestionSets } from "../../../components/use-question-sets";
 import type { QuestionSetFormData } from "../../../lib/question";
 import { Routes } from "../../../lib/routes";
 import { Button } from "../../../components/button";
+import { PageHeader } from "../../../components/page-header";
 
 const UpdateQuestionSetPage: React.FC = () => {
   const id = z.string().parse(useSearchParams().get("id"));
@@ -44,10 +45,9 @@ const UpdateQuestionSetPage: React.FC = () => {
   }
 
   return (
-    <div className="grid grid-rows-[auto_1fr] p-6 gap-6 min-h-0">
-      <h1 className="grid grid-cols-[auto_1fr] gap-1 items-center text-base">
-        <IconPencil />
-        問題セットの更新
+    <>
+      <h1>
+        <PageHeader icon={IconPencil}>問題セットの更新</PageHeader>
       </h1>
       {questionSet && (
         <QuestionSetForm
@@ -69,7 +69,7 @@ const UpdateQuestionSetPage: React.FC = () => {
           }
         />
       )}
-    </div>
+    </>
   );
 };
 

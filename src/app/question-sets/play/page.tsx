@@ -125,7 +125,7 @@ const PlayQuestionSetPage: React.FC = () => {
   );
 
   return (
-    <div className="grid-cols-[1fr_300px] min-h-0 min-w-0 grid p-4 gap-4 overflow-y-hidden">
+    <>
       <div className="overflow-hidden">
         {currentQuestion && (
           <TschEditor
@@ -195,7 +195,7 @@ const PlayQuestionSetPage: React.FC = () => {
         )}
       </div>
       <Confetti isShow={showConfetti} onChangeShow={setShowConfetti} />
-    </div>
+    </>
   );
 };
 

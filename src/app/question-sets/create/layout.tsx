@@ -4,7 +4,7 @@ type Props = { children: ReactNode };
 
 export default function Layout({ children }: Props) {
   return (
-    <div className="grid grid-cols-[1fr_1fr] p-10 gap-4 min-h-0 h-full w-full">
+    <div className="grid grid-rows-[auto_1fr] p-6 gap-6 min-h-0">
       {children}
     </div>
   );
