@@ -1,7 +1,6 @@
 "use client";
 
 import { IconPlus } from "@tabler/icons-react";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import type { SubmitHandler } from "react-hook-form";
 import { useIsNavigatedFromApp } from "../use-is-navigated-from-app";
@@ -11,6 +10,7 @@ import type { QuestionSetFormData } from "../../../lib/question";
 import { Routes } from "../../../lib/routes";
 import { Button } from "../../../components/button";
 import { PageHeader } from "../../../components/page-header";
+import { useRouter } from "next-nprogress-bar";
 
 const CreateQuestionSetPage: React.FC = () => {
   const isNavigatedFromApp = useIsNavigatedFromApp();

@@ -9,7 +9,6 @@ import {
   IconDownload,
   IconX,
 } from "@tabler/icons-react";
-import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { usePlayQuestionSet } from "./use-play-question-set";
 import { toast } from "sonner";
@@ -21,6 +20,7 @@ import { Question } from "../../../lib/question";
 import { tv } from "tailwind-variants";
 import { easeOutQuad } from "tween-functions";
 import ReactConfetti from "react-confetti";
+import { useRouter } from "next-nprogress-bar";
 
 const getQuestionId = (id: number) => `question-${id}`;
 

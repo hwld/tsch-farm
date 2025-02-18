@@ -12,7 +12,6 @@ import { Button, Link } from "react-aria-components";
 import { IconButton } from "./icon-button";
 import { Menu, MenuItem, MenuSeparator } from "./menu";
 import { useQuestionSets } from "./use-question-sets";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Tooltip } from "./tooltip";
 import clsx from "clsx";
@@ -22,6 +21,7 @@ import {
   type QuestionSet,
 } from "../lib/question";
 import { Routes } from "../lib/routes";
+import { useRouter } from "next-nprogress-bar";
 
 const Title: React.FC<{ title: string }> = ({ title }) => {
   return (

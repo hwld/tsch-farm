@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { type PropsWithChildren } from "react";
 import { RouterProvider } from "react-aria-components";
 import { QuestionSetsProvider } from "./use-question-sets";
@@ -9,6 +8,7 @@ import { TypeDefsProvider } from "./type-defs-provider";
 import { QuestionsProvider } from "./questions-provider";
 import { InitializeApp } from "./initialize";
 import type { Question } from "../lib/question";
+import { useRouter } from "next-nprogress-bar";
 
 type Props = { questions: Question[] } & PropsWithChildren;
 

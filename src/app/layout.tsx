@@ -7,6 +7,7 @@ import { Toaster, type ToastT } from "sonner";
 import { getQuestions } from "../lib/get-questions";
 import { Providers } from "../components/providers";
 import { Sidebar } from "../components/sidebar";
+import { ProgressBar } from "../components/progressbar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -38,6 +39,7 @@ export default async function RootLayout({
           "grid grid-cols-[80px_1fr] grid-rows-1 h-[100dvh] min-h-0 bg-brand-500"
         )}
       >
+        <ProgressBar />
         <Providers questions={questions}>
           <div className="py-5">
             <Sidebar />

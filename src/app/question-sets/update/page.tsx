@@ -1,7 +1,7 @@
 "use client";
 
 import { IconPencil } from "@tabler/icons-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useIsNavigatedFromApp } from "../use-is-navigated-from-app";
 import { z } from "zod";
 import { toast } from "sonner";
@@ -12,6 +12,7 @@ import type { QuestionSetFormData } from "../../../lib/question";
 import { Routes } from "../../../lib/routes";
 import { Button } from "../../../components/button";
 import { PageHeader } from "../../../components/page-header";
+import { useRouter } from "next-nprogress-bar";
 
 const UpdateQuestionSetPage: React.FC = () => {
   const id = z.string().parse(useSearchParams().get("id"));

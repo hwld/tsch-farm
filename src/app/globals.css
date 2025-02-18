@@ -6,3 +6,25 @@ body {
   color-scheme: dark;
   @apply bg-gray-900 text-gray-100 text-sm;
 }
+
+/*
+  現時点でnext-nprogress-bar内部ではidセレクタが使われているが、実際にはclass=nprogressが使われているため、スタイルが当たらない
+  https://github.com/Skyleen77/next-nprogress-bar/blob/main/src/utils/css.ts
+
+  v3で問題なく動くようになるらしい
+  https://github.com/Skyleen77/next-nprogress-bar/issues/93#issuecomment-2663565824
+*/
+
+.nprogress {
+  pointer-events: none;
+}
+
+.nprogress .bar {
+  position: fixed;
+  background-color: theme(colors.gray.100);
+  height: 3px;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: calc(infinity);
+}
