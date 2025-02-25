@@ -21,7 +21,7 @@ import {
   type QuestionSet,
 } from "../lib/question";
 import { Routes } from "../lib/routes";
-import { useRouter } from "next-nprogress-bar";
+import { useRouter } from "@bprogress/next";
 
 const Title: React.FC<{ title: string }> = ({ title }) => {
   return (

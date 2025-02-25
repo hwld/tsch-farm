@@ -12,7 +12,7 @@ import { QuestionToggle } from "../../components/question-toggle";
 import { useQuestions } from "../../components/questions-provider";
 import { useQuestionSets } from "../../components/use-question-sets";
 import { Routes } from "../../lib/routes";
-import { useRouter } from "next-nprogress-bar";
+import { useRouter } from "@bprogress/next";
 
 export default function HomePage() {
   const questions = useQuestions();

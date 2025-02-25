@@ -12,7 +12,7 @@ import type { QuestionSetFormData } from "../../../lib/question";
 import { Routes } from "../../../lib/routes";
 import { Button } from "../../../components/button";
 import { PageHeader } from "../../../components/page-header";
-import { useRouter } from "next-nprogress-bar";
+import { useRouter } from "@bprogress/next";
 
 const UpdateQuestionSetPage: React.FC = () => {
   const id = z.string().parse(useSearchParams().get("id"));

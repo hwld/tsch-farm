@@ -1,7 +1,7 @@
 import { usePathname, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { isNavigatedfromAppQueryName } from "../../lib/routes";
-import { useRouter } from "next-nprogress-bar";
+import { useRouter } from "@bprogress/next";
 
 /**
  *  ページがアプリ内から遷移されたか

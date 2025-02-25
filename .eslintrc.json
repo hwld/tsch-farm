@@ -22,7 +22,7 @@
             "importNames": [
               "useRouter"
             ],
-            "message": "Please import useRouter from 'next-nprogress-bar' instead of 'next/navigation'."
+            "message": "Please import useRouter from '@bprogress/next' instead of 'next/navigation'."
           }
         ]
       }

@@ -8,7 +8,8 @@ import { TypeDefsProvider } from "./type-defs-provider";
 import { QuestionsProvider } from "./questions-provider";
 import { InitializeApp } from "./initialize";
 import type { Question } from "../lib/question";
-import { useRouter } from "next-nprogress-bar";
+import { useRouter } from "@bprogress/next";
+import { ProgressBarProvider } from "./progressbar";
 
 type Props = { questions: Question[] } & PropsWithChildren;
 
@@ -16,16 +17,18 @@ export const Providers: React.FC<Props> = ({ children, questions }) => {
   const router = useRouter();
 
   return (
-    <InitializeApp>
-      <IsServerProvider>
-        <RouterProvider navigate={router.push}>
-          <QuestionsProvider questions={questions}>
-            <QuestionSetsProvider>
-              <TypeDefsProvider>{children}</TypeDefsProvider>
-            </QuestionSetsProvider>
-          </QuestionsProvider>
-        </RouterProvider>
-      </IsServerProvider>
-    </InitializeApp>
+    <ProgressBarProvider>
+      <InitializeApp>
+        <IsServerProvider>
+          <RouterProvider navigate={router.push}>
+            <QuestionsProvider questions={questions}>
+              <QuestionSetsProvider>
+                <TypeDefsProvider>{children}</TypeDefsProvider>
+              </QuestionSetsProvider>
+            </QuestionsProvider>
+          </RouterProvider>
+        </IsServerProvider>
+      </InitializeApp>
+    </ProgressBarProvider>
   );
 };

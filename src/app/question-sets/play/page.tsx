@@ -20,7 +20,7 @@ import { Question } from "../../../lib/question";
 import { tv } from "tailwind-variants";
 import { easeOutQuad } from "tween-functions";
 import ReactConfetti from "react-confetti";
-import { useRouter } from "next-nprogress-bar";
+import { useRouter } from "@bprogress/next";
 
 const getQuestionId = (id: number) => `question-${id}`;
 
