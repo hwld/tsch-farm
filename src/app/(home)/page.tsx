@@ -5,7 +5,7 @@ import {
   IconPlayerPlayFilled,
   IconStarFilled,
 } from "@tabler/icons-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Button, ButtonLink } from "../../components/button";
 import { PlayQuestionSetCard } from "../../components/question-set-card";
 import { QuestionToggle } from "../../components/question-toggle";
@@ -13,11 +13,12 @@ import { useQuestions } from "../../components/questions-provider";
 import { useQuestionSets } from "../../components/use-question-sets";
 import { Routes } from "../../lib/routes";
 import { useRouter } from "@bprogress/next";
+import { Skeleton } from "../../components/skeleton";
 
 export default function HomePage() {
   const questions = useQuestions();
   const {
-    query: { status, questionSets },
+    query: { status: questionSetsStatus, questionSets },
   } = useQuestionSets();
   const pinnedQuestionSets = questionSets?.filter((set) => set.isPinned);
 
@@ -35,6 +36,36 @@ export default function HomePage() {
       })
     );
   };
+
+  const pinnedQuestionSetsContent = useMemo(() => {
+    if (questionSetsStatus === "loading") {
+      return [...new Array(3)].map((_, i) => {
+        return (
+          <div key={i} className="h-[90px]">
+            <Skeleton />
+          </div>
+        );
+      });
+    }
+
+    if (questionSetsStatus === "success") {
+      if (!pinnedQuestionSets?.length) {
+        return (
+          <div className="border border-border rounded p-4 grid grid-rows-[auto_auto_1fr] gap-4 place-items-center">
+            <IconLayersOff className="size-[100px] text-gray-400" />
+            ピン留めされている問題セットがありません
+            <ButtonLink leftIcon={IconStarFilled} href={Routes.questionSets()}>
+              ピン留めしに行く
+            </ButtonLink>
+          </div>
+        );
+      }
+
+      return pinnedQuestionSets.map((set) => {
+        return <PlayQuestionSetCard key={set.id} questionSet={set} />;
+      });
+    }
+  }, [pinnedQuestionSets, questionSetsStatus]);
 
   return (
     <>
@@ -58,23 +89,7 @@ export default function HomePage() {
           </ButtonLink>
         </div>
         <div className="border-border rounded-lg grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] auto-rows-min gap-2 p-4 overflow-auto">
-          {status === "success" && pinnedQuestionSets?.length
-            ? pinnedQuestionSets.map((set) => {
-                return <PlayQuestionSetCard key={set.id} questionSet={set} />;
-              })
-            : null}
-          {status === "success" && pinnedQuestionSets?.length === 0 ? (
-            <div className="border border-border rounded p-4 grid grid-rows-[auto_auto_1fr] gap-4 place-items-center">
-              <IconLayersOff className="size-[100px] text-gray-400" />
-              ピン留めされている問題セットがありません
-              <ButtonLink
-                leftIcon={IconStarFilled}
-                href={Routes.questionSets()}
-              >
-                ピン留めしに行く
-              </ButtonLink>
-            </div>
-          ) : null}
+          {pinnedQuestionSetsContent}
         </div>
       </div>
       <div className="border rounded-lg border-border grid grid-rows-[auto_1fr_auto] min-h-0 overflow-hidden">
